@@ -2,15 +2,19 @@
     <Style src="project://database/Assets/Scripts/Editor/UI/SoundEditor_Style.uss?fileID=7433441132597879392&amp;guid=6d7776cc52378ed4b9f604b29bd908af&amp;type=3#SoundEditor_Style" />
     <SplitView name="splitview" fixed-pane-initial-dimension="600">
         <ui:VisualElement name="soundwindow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:Label tabindex="-1" text="Blackboard" display-tooltip-when-elided="true" name="main-label" picking-mode="Ignore" style="font-size: 14px; background-color: rgba(51, 51, 51, 0.31); padding-top: 2px; padding-bottom: 5%;" />
-            <ui:VisualElement name="main-window" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+            <ui:Label tabindex="-1" text="Blackboard" display-tooltip-when-elided="true" name="main-label" picking-mode="Ignore" style="font-size: 14px; padding-top: 2px; padding-bottom: 5%;" />
+            <ui:TextField picking-mode="Ignore" label="Sound File" value="None" name="audio-field" readonly="true">
+                <ui:Button text="Select File" display-tooltip-when-elided="true" name="audio-select" style="height: 100%; width: 20%;" />
+            </ui:TextField>
+            <ui:VisualElement name="main-window" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-top: 5%;">
                 <ui:VisualElement name="amplitude" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-self: center; align-items: center; max-width: 95%; max-height: 40%; min-width: 95%; min-height: 40%; justify-content: center;">
                     <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="amplitude-scroller" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="AlwaysVisible" style="background-color: rgba(43, 43, 43, 0.78); flex-grow: 1; flex-direction: row; max-height: 95%; min-height: 90%;">
-                        <ui:VisualElement name="amplitude-container" style="flex-grow: 1; flex-shrink: 0; height: 90%; align-self: flex-end; flex-wrap: nowrap; flex-direction: row;" />
+                        <ui:VisualElement name="wave-container" style="width: 0; height: 100%;" />
                     </ui:ScrollView>
-                    <ui:VisualElement name="scrapper" class="scrapper" style="flex-grow: 1; position: absolute; left: 23px; height: 90%; width: 1%; align-self: center; top: 1px;">
-                        <ui:VisualElement name="scrapper-head" picking-mode="Ignore" style="width: 150%; height: 5%; background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/scrapper-icon.png?fileID=2800000&amp;guid=0be92e333307e9442b6ca9a614ae702d&amp;type=3#scrapper-icon&apos;); position: absolute; left: -25%; top: -2%; -unity-background-scale-mode: stretch-to-fill; -unity-slice-left: 0; bottom: 25%;" />
-                        <ui:VisualElement name="scrapper-body" picking-mode="Ignore" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: relative; left: 0; height: 100%; width: 50%; align-self: center; top: 0;" />
+                    <ui:VisualElement name="scrapper" class="scrapper" style="flex-grow: 1; position: absolute; left: 23px; height: 95%; width: 2%; align-self: center; top: -8px;">
+                        <ui:VisualElement name="scrapper-body" picking-mode="Ignore" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: relative; left: 0; height: 145%; width: 20%; align-self: center; top: 0;">
+                            <ui:VisualElement name="scrapper-head" picking-mode="Ignore" style="width: 250%; height: 5%; background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/scrapper-icon.png?fileID=2800000&amp;guid=0be92e333307e9442b6ca9a614ae702d&amp;type=3#scrapper-icon&apos;); position: absolute; left: -75%; top: 0; -unity-background-scale-mode: stretch-to-fill; -unity-slice-left: 0; bottom: 154px;" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="button-container" style="flex-shrink: 1; flex-direction: row; height: 15%; width: 50%; align-self: center; justify-content: center; align-items: center;">
