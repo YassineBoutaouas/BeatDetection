@@ -1,0 +1,25 @@
+.unity-button {
+    width: 15%;
+    height: 60%;
+}
+
+.unity-button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    -unity-background-image-tint-color: rgb(219, 175, 104);
+}
+
+.unity-button:active {
+    background-color: rgba(0, 0, 0, 0.59);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left-color: rgb(214, 161, 94);
+    border-right-color: rgb(214, 161, 94);
+    border-top-color: rgb(214, 161, 94);
+    border-bottom-color: rgb(214, 161, 94);
+}
