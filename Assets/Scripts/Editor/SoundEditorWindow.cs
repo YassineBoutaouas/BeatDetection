@@ -40,9 +40,9 @@ public class SoundEditorWindow : EditorWindow
 
     private SoundFileSearchProvider _soundFileSearchProvider;
 
-    private int[] _waveFormResolution = new int[] { 2048, 1024, 0 };
+    private int[] _waveFormResolution = new int[] { 4096, 1024 };
     private Color _waveBackDrop = new Color(0, 0, 0, 0);
-    private Color _waveColor = new Color(199, 169, 88, 1);
+    private Color _waveColor = new Color(0.78f, 0.65f, 0.34f, 1);
 
     private AudioClip _audioClip;
     private Texture2D _waveFormTexture;
@@ -54,6 +54,7 @@ public class SoundEditorWindow : EditorWindow
 
     public void CreateGUI()
     {
+        #region Visual element
         var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(_configuratorPath);
         visualTree.CloneTree(rootVisualElement);
 
@@ -78,6 +79,8 @@ public class SoundEditorWindow : EditorWindow
         _audioField.value = null;
 
         _selectButton = rootVisualElement.Q<Button>("audio-select");
+        #endregion
+
         _selectButton.clicked -= OnOpenSearchTree;
         _selectButton.clicked += OnOpenSearchTree;
 
@@ -87,8 +90,8 @@ public class SoundEditorWindow : EditorWindow
         _soundFileSearchProvider.OnSelectedSoundFile = null;
         _soundFileSearchProvider.OnSelectedSoundFile += OnSelectSoundFile;
 
-        _waveFormTexture = new Texture2D(_waveFormResolution[0], _waveFormResolution[1], TextureFormat.RGBA32, false);
-        _waveFormResolution[2] = (int)_waveFormContainer.resolvedStyle.height / 2;
+        _waveFormTexture = new Texture2D(_waveFormResolution[0], _waveFormResolution[1], TextureFormat.RGBA32, true);
+        _wavesArray = new float[_waveFormResolution[0]];
     }
 
     private void OnOpenSearchTree() { SearchWindow.Open(new SearchWindowContext(Mouse.current.position.ReadValue()), _soundFileSearchProvider); }
@@ -101,22 +104,16 @@ public class SoundEditorWindow : EditorWindow
 
     private void DrawWaveForm()
     {
-        _wavesArray = new float[_waveFormResolution[0]];
-
         _sampleSize = _audioClip.samples * _audioClip.channels;
         _sampleArray = new float[_sampleSize];
 
         _audioClip.GetData(_sampleArray, 0);
 
-        int compressedSize = (_sampleSize / _waveFormResolution[0]);
-        for (int i = 0; i < _waveFormResolution[0]; i++)
-        {
-            _wavesArray[i] = Mathf.Abs(_sampleArray[i * compressedSize]);
-        }
+        int compressedSize = _sampleSize / _waveFormResolution[0];
 
-        //Clearing
         for (int x = 0; x < _waveFormResolution[0]; x++)
         {
+            _wavesArray[x] = Mathf.Abs(_sampleArray[x * compressedSize]);
             for (int y = 0; y < _waveFormResolution[1]; y++)
             {
                 _waveFormTexture.SetPixel(x, y, _waveBackDrop);
@@ -126,12 +123,13 @@ public class SoundEditorWindow : EditorWindow
         IStyle rect = _waveFormContainer.style;
         rect.width = compressedSize;
 
+        int height = (int)(_waveFormResolution[1] / 2);
         for (int x = 0; x < _waveFormResolution[0]; x++)
         {
             for (int y = 0; y < _wavesArray[x] * _waveFormResolution[1]; y++)
             {
-                _waveFormTexture.SetPixel(x, _waveFormResolution[2] + y, _waveColor);
-                _waveFormTexture.SetPixel(x, _waveFormResolution[2] - y, _waveColor);
+                _waveFormTexture.SetPixel(x, height + y, _waveColor);
+                _waveFormTexture.SetPixel(x, height - y, _waveColor);
             }
         }
 
@@ -139,48 +137,6 @@ public class SoundEditorWindow : EditorWindow
 
         _waveFormContainer.style.backgroundImage = _waveFormTexture;
     }
-
-    //Multithreaded?
-    //private void DrawWaveForm()
-    //{
-    //    //int width = (int)_waveFormContainer.resolvedStyle.width;
-    //    //int height = (int)_waveFormContainer.resolvedStyle.height;
-
-    //    //float[] waves = new float[width];
-
-    //    //int sampleSize = _audioClip.samples * _audioClip.channels;
-    //    //float[] samples = new float[sampleSize];
-    //    //_audioClip.GetData(samples, 0);
-
-    //    int packSize = (sampleSize / width);
-    //    for (int w = 0; w < width; w++)
-    //    {
-    //        waves[w] = Mathf.Abs(samples[w * packSize]);
-    //    }
-
-    //    //for (int x = 0; x < width; x++)
-    //    //{
-    //    //    for (int y = 0; y < height; y++)
-    //    //    {
-    //    //        _waveFormTexture.SetPixel(x, y, Color.black);
-    //    //    }
-    //    //}
-
-    //    int halfHeight = height / 2;
-
-    //    for (int x = 0; x < width; x++)
-    //    {
-    //        for (int y = 0; y < waves[x] * height; y++)
-    //        {
-    //            _waveFormTexture.SetPixel(x, halfHeight + y, Color.red + Color.blue);
-    //            _waveFormTexture.SetPixel(x, halfHeight - y, Color.red + Color.blue);
-    //        }
-    //    }
-
-    //    _waveFormTexture.Apply();
-
-    //    _waveFormContainer.style.backgroundImage = _waveFormTexture;
-    //}
 
     private void OnDisable()
     {
