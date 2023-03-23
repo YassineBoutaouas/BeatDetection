@@ -24,9 +24,8 @@ public class SoundEditorWindow : EditorWindow
 
     #region Visual Elements
     private VisualElement _mainWindow;
-    private VisualElement _scrapper;
 
-    private Scroller _amplitudeScroller;
+    private VisualElement _waveFormViewPort;
     private VisualElement _waveFormContainer;
 
     private Button _pauseButton;
@@ -59,6 +58,8 @@ public class SoundEditorWindow : EditorWindow
     private AudioSource _audioSource;
     private GameObject _audioObject;
 
+    private DragAndDropManipulator _dragManipulator;
+
     public void CreateGUI()
     {
         #region Visual element
@@ -70,9 +71,7 @@ public class SoundEditorWindow : EditorWindow
 
         _mainWindow = rootVisualElement.Q<VisualElement>("main-window");
 
-        _scrapper = rootVisualElement.Q<VisualElement>("scrapper");
-
-        _amplitudeScroller = rootVisualElement.Q<Scroller>("amplitude-scroller");
+        _waveFormViewPort = rootVisualElement.Q<VisualElement>("amplitude");
         _waveFormContainer = rootVisualElement.Q<VisualElement>("wave-container");
 
         _pauseButton = rootVisualElement.Q<Button>("pause-button");
@@ -85,16 +84,10 @@ public class SoundEditorWindow : EditorWindow
         _selectButton = rootVisualElement.Q<Button>("audio-select");
 
         _volumeSlider = rootVisualElement.Q<Slider>();
-
-        _audioClip = null;
-        _audioField.value = "None";
         #endregion
 
-        #region Select Sound file
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
-        _soundFileSearchProvider.OnSelectedSoundFile = null;
-        _soundFileSearchProvider.OnSelectedSoundFile += OnSelectSoundFile;
-        #endregion
+        _soundFileSearchProvider.Initialize(OnSelectSoundFile);
 
         _waveFormTexture = new Texture2D(_waveFormResolution[0], _waveFormResolution[1], TextureFormat.RGBA32, true);
         _wavesArray = new float[_waveFormResolution[0]];
@@ -110,6 +103,10 @@ public class SoundEditorWindow : EditorWindow
         _playButton.clicked += OnPlaySoundFile;
         _pauseButton.clicked += OnPauseSoundFile;
         _stopButton.clicked += OnStopSoundFile;
+
+        _waveFormViewPort.style.color= Color.white;
+
+        //_dragManipulator = new DragAndDropManipulator(_scrapper, _waveFormViewPort);
     }
 
     #region Select methods
@@ -165,6 +162,7 @@ public class SoundEditorWindow : EditorWindow
     }
     #endregion
 
+    #region Audio methods
     private void ChangeVolume(ChangeEvent<float> volume)
     {
         if (_audioSource == null) return;
@@ -192,6 +190,7 @@ public class SoundEditorWindow : EditorWindow
 
         _audioSource.Stop();
     }
+    #endregion
 
     private void OnDisable()
     {
@@ -202,7 +201,7 @@ public class SoundEditorWindow : EditorWindow
         _pauseButton.clicked -= OnPauseSoundFile;
         _stopButton.clicked -= OnStopSoundFile;
 
-        _soundFileSearchProvider.OnSelectedSoundFile = null;
+        _soundFileSearchProvider.OnRelease();
 
         GameObject.DestroyImmediate(_audioObject);
     }
@@ -213,10 +212,17 @@ public class SoundFileSearchProvider : ScriptableObject, ISearchWindowProvider
     public System.Action<AudioClip> OnSelectedSoundFile;
     private List<SearchTreeEntry> _searchTree;
 
-    public SoundFileSearchProvider()
+    public void Initialize(params Action<AudioClip>[] actions)
     {
         _searchTree = new List<SearchTreeEntry>();
+
+        OnSelectedSoundFile = null;
+
+        foreach (Action<AudioClip> a in actions)
+            OnSelectedSoundFile += a;
     }
+
+    public void OnRelease() { OnSelectedSoundFile = null; }
 
     public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
     {

@@ -24,7 +24,7 @@
     border-bottom-color: rgb(214, 161, 94);
 }
 
-.scrapper:hover#scrapper-body {
+.scrapper:hover {
     background-color: rgb(219, 175, 104);
     -unity-background-image-tint-color: rgb(219, 175, 104);
 }

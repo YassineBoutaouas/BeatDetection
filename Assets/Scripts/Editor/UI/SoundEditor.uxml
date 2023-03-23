@@ -8,15 +8,12 @@
             </ui:TextField>
             <ui:Slider label="Volume" value="1" high-value="1" name="volume-slider" focusable="false" style="margin-bottom: 10px; margin-top: 5px; width: 79%;" />
             <ui:VisualElement name="main-window" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-top: 5%;">
-                <ui:VisualElement name="amplitude" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-self: center; align-items: center; max-width: 95%; max-height: 40%; min-width: 95%; min-height: 40%; justify-content: center;">
-                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="amplitude-scroller" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="AlwaysVisible" style="background-color: rgba(43, 43, 43, 0.78); flex-grow: 1; flex-direction: row; max-height: 95%; min-height: 90%;">
+                <ui:VisualElement name="amplitude" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.3); align-self: center; align-items: center; max-width: 95%; max-height: 55%; min-width: 95%; min-height: 40%; justify-content: flex-end; flex-direction: column;">
+                    <ui:VisualElement name="event-visualizer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-shrink: 0; flex-direction: row; width: 100%; max-width: 100%; min-width: 100%;" />
+                    <ui:Scroller high-value="100" direction="Horizontal" value="0" name="scrapper" style="width: 100%;" />
+                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="amplitude-scroller" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="AlwaysVisible" style="background-color: rgba(43, 43, 43, 0.78); flex-grow: 1; flex-direction: row; max-height: 85%; min-height: 85%;">
                         <ui:VisualElement name="wave-container" style="flex-grow: 0; height: 100%; width: 0; transform-origin: left;" />
                     </ui:ScrollView>
-                    <ui:VisualElement name="scrapper" class="scrapper" style="flex-grow: 1; position: absolute; left: 23px; height: 95%; width: 2%; align-self: center; top: -8px;">
-                        <ui:VisualElement name="scrapper-body" picking-mode="Ignore" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: relative; left: 0; height: 145%; width: 20%; align-self: center; top: 0;">
-                            <ui:VisualElement name="scrapper-head" picking-mode="Ignore" style="width: 250%; height: 5%; background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/scrapper-icon.png?fileID=2800000&amp;guid=0be92e333307e9442b6ca9a614ae702d&amp;type=3#scrapper-icon&apos;); position: absolute; left: -75%; top: 0; -unity-background-scale-mode: stretch-to-fill; -unity-slice-left: 0; bottom: 154px;" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="button-container" style="flex-shrink: 1; flex-direction: row; height: 15%; width: 50%; align-self: center; justify-content: center; align-items: center;">
                     <ui:Button display-tooltip-when-elided="true" name="stop-button" focusable="false" style="background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/stop-icon.png?fileID=2800000&amp;guid=fc0ca343052e37b4eb9d71dfddc0b4f7&amp;type=3#stop-icon&apos;); -unity-background-scale-mode: scale-to-fit;" />
