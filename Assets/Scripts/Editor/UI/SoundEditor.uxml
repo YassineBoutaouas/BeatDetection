@@ -6,6 +6,7 @@
             <ui:TextField picking-mode="Ignore" label="Sound File" value="None" name="audio-field" readonly="true">
                 <ui:Button text="Select File" display-tooltip-when-elided="true" name="audio-select" style="height: 100%; width: 20%;" />
             </ui:TextField>
+            <ui:Slider label="Volume" value="1" high-value="1" name="volume-slider" focusable="false" style="margin-bottom: 10px; margin-top: 5px; width: 79%;" />
             <ui:VisualElement name="main-window" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-top: 5%;">
                 <ui:VisualElement name="amplitude" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-self: center; align-items: center; max-width: 95%; max-height: 40%; min-width: 95%; min-height: 40%; justify-content: center;">
                     <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="amplitude-scroller" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="AlwaysVisible" style="background-color: rgba(43, 43, 43, 0.78); flex-grow: 1; flex-direction: row; max-height: 95%; min-height: 90%;">
@@ -18,10 +19,9 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="button-container" style="flex-shrink: 1; flex-direction: row; height: 15%; width: 50%; align-self: center; justify-content: center; align-items: center;">
-                    <ui:Button display-tooltip-when-elided="true" name="skip-button" focusable="false" style="background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/skip-icon.png?fileID=2800000&amp;guid=cdf02a249bb9848478a877ea37be19ba&amp;type=3#skip-icon&apos;); -unity-background-scale-mode: scale-to-fit;" />
-                    <ui:Button display-tooltip-when-elided="true" name="pause-button" focusable="false" style="-unity-background-scale-mode: scale-to-fit; background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/pause-icon.png?fileID=2800000&amp;guid=0b79e3944b75c744bacbc54b7e37869e&amp;type=3#pause-icon&apos;);" />
-                    <ui:Button display-tooltip-when-elided="true" name="play-button" focusable="false" style="background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/play-icon.png?fileID=2800000&amp;guid=b067d3bf70e9c8a45932f9b5fc3cc26c&amp;type=3#play-icon&apos;); -unity-background-scale-mode: scale-to-fit;" />
                     <ui:Button display-tooltip-when-elided="true" name="stop-button" focusable="false" style="background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/stop-icon.png?fileID=2800000&amp;guid=fc0ca343052e37b4eb9d71dfddc0b4f7&amp;type=3#stop-icon&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                    <ui:Button display-tooltip-when-elided="true" name="play-button" focusable="false" style="background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/play-icon.png?fileID=2800000&amp;guid=b067d3bf70e9c8a45932f9b5fc3cc26c&amp;type=3#play-icon&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                    <ui:Button display-tooltip-when-elided="true" name="pause-button" focusable="false" style="-unity-background-scale-mode: scale-to-fit; background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/pause-icon.png?fileID=2800000&amp;guid=0b79e3944b75c744bacbc54b7e37869e&amp;type=3#pause-icon&apos;);" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
