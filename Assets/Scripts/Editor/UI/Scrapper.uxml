@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Scripts/Editor/UI/Scrapper_Style.uss?fileID=7433441132597879392&amp;guid=3da05076811c7b84a90d4ecd87dc65ff&amp;type=3#Scrapper_Style" />
+    <ui:Scroller high-value="100" direction="Horizontal" value="42" name="scrapper" class="scrapper" style="width: 100%; max-width: 100%; min-width: 100%; height: auto;" />
+</ui:UXML>

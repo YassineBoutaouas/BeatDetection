@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Template name="Scrapper" src="project://database/Assets/Scripts/Editor/UI/Scrapper.uxml?fileID=9197481963319205126&amp;guid=308f7411a06e1b640909bf653bf14ae4&amp;type=3#Scrapper" />
     <Style src="project://database/Assets/Scripts/Editor/UI/SoundEditor_Style.uss?fileID=7433441132597879392&amp;guid=6d7776cc52378ed4b9f604b29bd908af&amp;type=3#SoundEditor_Style" />
     <SplitView name="splitview" fixed-pane-initial-dimension="800">
         <ui:VisualElement name="soundwindow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
@@ -10,6 +11,7 @@
             <ui:VisualElement name="main-window" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-top: 5%;">
                 <ui:VisualElement name="amplitude" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.3); align-self: center; align-items: center; max-width: 95%; max-height: 55%; min-width: 95%; min-height: 40%; justify-content: flex-end; flex-direction: column;">
                     <ui:VisualElement name="event-visualizer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-shrink: 0; flex-direction: row; width: 100%; max-width: 100%; min-width: 100%;" />
+                    <ui:Instance template="Scrapper" name="Scrapper" style="max-width: 100%; min-width: 100%; width: 100%;" />
                     <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="amplitude-scroller" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="AlwaysVisible" style="background-color: rgba(43, 43, 43, 0.78); flex-grow: 1; flex-direction: row; max-height: 85%; min-height: 85%;">
                         <ui:VisualElement name="wave-container" style="flex-grow: 0; height: 100%; width: 0; transform-origin: left;" />
                     </ui:ScrollView>

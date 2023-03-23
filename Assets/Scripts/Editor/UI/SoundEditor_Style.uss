@@ -28,3 +28,22 @@
     background-color: rgb(219, 175, 104);
     -unity-background-image-tint-color: rgb(219, 175, 104);
 }
+
+.unity-base-slider__dragger:hover {
+    border-left-color: rgb(219, 175, 104);
+    border-right-color: rgb(219, 175, 104);
+    border-top-color: rgb(219, 175, 104);
+    border-bottom-color: rgb(219, 175, 104);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+.unity-base-slider__dragger {
+    background-color: rgb(123, 102, 70);
+}
+
+.unity-base-slider__tracker {
+    background-color: rgba(219, 175, 104, 0.1);
+}
