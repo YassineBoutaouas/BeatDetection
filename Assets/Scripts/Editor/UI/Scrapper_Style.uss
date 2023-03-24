@@ -1,7 +1,5 @@
 .unity-base-slider__dragger {
     background-image: url('project://database/Assets/Scripts/Editor/UI/scrapper-icon.png?fileID=2800000&guid=0be92e333307e9442b6ca9a614ae702d&type=3#scrapper-icon');
-    -unity-background-scale-mode: scale-and-crop;
-    -unity-slice-left: 0;
     background-color: rgba(0, 0, 0, 0);
     border-top-left-radius: -10px;
     border-bottom-left-radius: -10px;
@@ -12,6 +10,9 @@
     border-top-width: -5px;
     border-bottom-width: -5px;
     -unity-background-image-tint-color: rgb(219, 175, 104);
+    -unity-background-scale-mode: scale-and-crop;
+    flex-grow: 1;
+    flex-shrink: 0;
 }
 
 .unity-base-slider__dragger:hover {
@@ -35,16 +36,19 @@
 }
 
 #unity-tracker {
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-.dragger-body {
-    height: 100%;
-    background-color: rgb(219, 175, 104);
-    transform-origin: top;
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .unity-base-slider__dragger:hover .dragger-body {
     height: 100%;
     background-color: rgb(255, 213, 145);
+}
+
+.dragger-body {
+    background-color: rgb(219, 175, 104);
+    flex-grow: 1;
+}
+
+#unity-slider-container {
+    background-color: rgba(0, 0, 0, 0);
 }

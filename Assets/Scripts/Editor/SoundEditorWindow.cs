@@ -28,6 +28,9 @@ public class SoundEditorWindow : EditorWindow
     private VisualElement _waveFormViewPort;
     private VisualElement _waveFormContainer;
 
+    private VisualElement _scrapper;
+    private VisualElement _scrapperBody;
+
     private Button _pauseButton;
     private Button _playButton;
     private Button _stopButton;
@@ -84,6 +87,9 @@ public class SoundEditorWindow : EditorWindow
         _selectButton = rootVisualElement.Q<Button>("audio-select");
 
         _volumeSlider = rootVisualElement.Q<Slider>();
+
+        _scrapper = rootVisualElement.Q<VisualElement>("unity-dragger");
+        _scrapperBody = rootVisualElement.Q<VisualElement>("body");
         #endregion
 
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
@@ -106,7 +112,7 @@ public class SoundEditorWindow : EditorWindow
 
         _waveFormViewPort.style.color= Color.white;
 
-        //_dragManipulator = new DragAndDropManipulator(_scrapper, _waveFormViewPort);
+        _dragManipulator = new DragAndDropManipulator(_scrapperBody, _scrapper);
     }
 
     #region Select methods

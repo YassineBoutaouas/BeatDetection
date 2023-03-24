@@ -11,13 +11,13 @@ using UnityEngine.UIElements;
 
 public class DragAndDropManipulator : PointerManipulator
 {
-    private VisualElement _windowElement;
+    private VisualElement _dragger;
     private bool enabled { get; set; }
 
-    public DragAndDropManipulator(VisualElement dragger, VisualElement windowElement)
+    public DragAndDropManipulator(VisualElement draggerBody, VisualElement dragger)
     {
-        target = dragger;
-        _windowElement = windowElement;
+        _dragger = dragger;
+        target = draggerBody;
     }
 
     protected override void RegisterCallbacksOnTarget()
@@ -40,16 +40,14 @@ public class DragAndDropManipulator : PointerManipulator
     {
         target.CapturePointer(evt.pointerId);
         enabled = true;
+        target.transform.position = new Vector3(_dragger.transform.position.x, target.transform.position.y);
     }
 
     private void PointerMoveHandler(PointerMoveEvent evt)
     {
         if (!(enabled && target.HasPointerCapture(evt.pointerId))) return;
 
-        float rightBound = _windowElement.transform.position.x + _windowElement.resolvedStyle.width;
-        float pos = Mathf.Clamp(evt.position.x, 0, rightBound);
-
-        target.transform.position = new Vector2(pos, target.transform.position.y);
+        target.transform.position = new Vector3(_dragger.transform.position.x, target.transform.position.y);
     }
 
     private void PointerUpHandler(PointerUpEvent evt)

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -30,19 +31,20 @@ public class Scrapper : Scroller
         VisualElement draggerBody = new VisualElement { name = "dragger-body" };
         draggerBody.AddToClassList("dragger-body");
 
-        VisualElement lowButton = this.Q<RepeatButton>("unity-low-button");
-        VisualElement highButton = this.Q<RepeatButton>("unity-high-button");
-
-        Remove(lowButton);
-        Remove(highButton);
-
-        Debug.Log(lowButton);
+        Remove(this.Q<RepeatButton>("unity-low-button"));
+        Remove(this.Q<RepeatButton>("unity-high-button"));
 
         dragger.Add(draggerBody);
 
+        VisualElement sliderParent = this.Q<VisualElement>("unity-slider");
+        StyleEnum<Overflow> overflow = sliderParent.style.overflow;
+        overflow.value = Overflow.Visible;
+        sliderParent.style.overflow = overflow;
+
+        VisualElement slidercontainer = sliderParent.Children().ElementAt(0);
+        slidercontainer.name = "unity-slider-container";
+
         styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(_configuratorStyle));
     }
-
-    
 }
 #endif
