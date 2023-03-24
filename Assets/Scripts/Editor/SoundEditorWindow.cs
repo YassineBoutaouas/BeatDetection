@@ -24,8 +24,6 @@ public class SoundEditorWindow : EditorWindow
 
     #region Visual Elements
     private VisualElement _mainWindow;
-
-    private VisualElement _waveFormViewPort;
     private VisualElement _waveFormContainer;
 
     private Button _pauseButton;
@@ -33,14 +31,13 @@ public class SoundEditorWindow : EditorWindow
     private Button _stopButton;
     private Button _selectButton;
 
+    private Scrapper _scrapper;
     private Slider _volumeSlider;
 
     private TextField _audioField;
 
-    private Scrapper _scrapper;
-    #endregion
-
     private SoundFileSearchProvider _soundFileSearchProvider;
+    #endregion
 
     #region Wave form
     private int[] _waveFormResolution = new int[] { 4096, 1024 };
@@ -59,9 +56,11 @@ public class SoundEditorWindow : EditorWindow
     private AudioSource _audioSource;
     private GameObject _audioObject;
 
-    public void CreateGUI()
+    private float _currentTimeStamp;
+    TextField relativeTime;
+
+    private void InitFields()
     {
-        #region Visual element
         var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(_configuratorPath);
         visualTree.CloneTree(rootVisualElement);
 
@@ -70,7 +69,6 @@ public class SoundEditorWindow : EditorWindow
 
         _mainWindow = rootVisualElement.Q<VisualElement>("main-window");
 
-        _waveFormViewPort = rootVisualElement.Q<VisualElement>("amplitude");
         _waveFormContainer = rootVisualElement.Q<VisualElement>("wave-container");
 
         _pauseButton = rootVisualElement.Q<Button>("pause-button");
@@ -84,9 +82,14 @@ public class SoundEditorWindow : EditorWindow
         _volumeSlider = rootVisualElement.Q<Slider>();
 
         _scrapper = rootVisualElement.Q<Scrapper>();
-        #endregion
 
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
+    }
+
+    public void CreateGUI()
+    {
+        InitFields();
+
         _soundFileSearchProvider.Initialize(OnSelectSoundFile);
 
         _waveFormTexture = new Texture2D(_waveFormResolution[0], _waveFormResolution[1], TextureFormat.RGBA32, true);
@@ -105,16 +108,27 @@ public class SoundEditorWindow : EditorWindow
         _stopButton.clicked += OnStopSoundFile;
 
 
-        TextField relativeTime = new TextField("Relative Time");
+        relativeTime = new TextField("Relative Time");
         _mainWindow.Add(relativeTime);
-        _scrapper.valueChanged += x => { if(_audioClip != null) relativeTime.value = ((x * _audioClip.length) / 60).ToString(); };
-        
+        _scrapper.valueChanged += OnUpdateCurrentTime;
+
     }
 
     public void OnGUI()
     {
         _scrapper.DraggerBody.transform.scale = new Vector3(_scrapper.DraggerBody.transform.scale.x, _waveFormContainer.resolvedStyle.height);
     }
+
+    #region Time methods
+    private void OnUpdateCurrentTime(float time)
+    {
+        if (_audioClip == null) return;
+
+        _currentTimeStamp = _audioClip.length * time;
+
+        relativeTime.value = $"{_currentTimeStamp}; {time}";
+    }
+    #endregion
 
     #region Select methods
     private void OnOpenSearchTree() { SearchWindow.Open(new SearchWindowContext(Mouse.current.position.ReadValue()), _soundFileSearchProvider); }
@@ -126,6 +140,10 @@ public class SoundEditorWindow : EditorWindow
         _audioSource.clip = _audioClip;
 
         DrawWaveForm();
+
+        _scrapper.value = 0;
+
+        OnUpdateCurrentTime(0);
     }
 
     private void DrawWaveForm()
@@ -196,6 +214,9 @@ public class SoundEditorWindow : EditorWindow
         if (_audioSource == null) return;
 
         _audioSource.Stop();
+
+        _scrapper.value = 0;
+        OnUpdateCurrentTime(0);
     }
     #endregion
 
