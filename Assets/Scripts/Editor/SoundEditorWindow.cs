@@ -28,8 +28,6 @@ public class SoundEditorWindow : EditorWindow
     private VisualElement _waveFormViewPort;
     private VisualElement _waveFormContainer;
 
-    private VisualElement _scrapperBody;
-
     private Button _pauseButton;
     private Button _playButton;
     private Button _stopButton;
@@ -38,6 +36,8 @@ public class SoundEditorWindow : EditorWindow
     private Slider _volumeSlider;
 
     private TextField _audioField;
+
+    private Scrapper _scrapper;
     #endregion
 
     private SoundFileSearchProvider _soundFileSearchProvider;
@@ -81,10 +81,9 @@ public class SoundEditorWindow : EditorWindow
         _audioField = rootVisualElement.Q<TextField>();
         _audioField.focusable = false;
 
-
         _volumeSlider = rootVisualElement.Q<Slider>();
 
-        _scrapperBody = rootVisualElement.Q<VisualElement>("dragger-body");
+        _scrapper = rootVisualElement.Q<Scrapper>();
         #endregion
 
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
@@ -104,11 +103,17 @@ public class SoundEditorWindow : EditorWindow
         _playButton.clicked += OnPlaySoundFile;
         _pauseButton.clicked += OnPauseSoundFile;
         _stopButton.clicked += OnStopSoundFile;
+
+
+        TextField relativeTime = new TextField("Relative Time");
+        _mainWindow.Add(relativeTime);
+        _scrapper.valueChanged += x => { if(_audioClip != null) relativeTime.value = ((x * _audioClip.length) / 60).ToString(); };
+        
     }
 
     public void OnGUI()
     {
-        _scrapperBody.transform.scale = new Vector3(_scrapperBody.transform.scale.x, _waveFormContainer.resolvedStyle.height);
+        _scrapper.DraggerBody.transform.scale = new Vector3(_scrapper.DraggerBody.transform.scale.x, _waveFormContainer.resolvedStyle.height);
     }
 
     #region Select methods

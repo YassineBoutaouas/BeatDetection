@@ -13,8 +13,6 @@ public class Scrapper : Scroller
 
     public new class UxmlTraits : Scroller.UxmlTraits
     {
-        UxmlFloatAttributeDescription DraggerHeight = new UxmlFloatAttributeDescription { name = "BodyHeight", defaultValue = 1 };
-
         public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
         {
             base.Init(ve, bag, cc);
@@ -23,27 +21,26 @@ public class Scrapper : Scroller
 
     private const string _configuratorStyle = "Assets/Scripts/Editor/UI/Scrapper_Style.uss";
 
-    public float dragger_height { get; set; }
+    public VisualElement Dragger { get; }
+    public VisualElement DraggerBody { get; }
 
     public Scrapper()
     {
-        VisualElement dragger = this.Q<VisualElement>("unity-dragger");
-        VisualElement draggerBody = new VisualElement { name = "dragger-body" };
-        draggerBody.AddToClassList("dragger-body");
+        Dragger = this.Q<VisualElement>("unity-dragger");
+        DraggerBody = new VisualElement { name = "dragger-body" };
+        DraggerBody.AddToClassList("dragger-body");
 
         Remove(this.Q<RepeatButton>("unity-low-button"));
         Remove(this.Q<RepeatButton>("unity-high-button"));
 
-        dragger.Add(draggerBody);
+        Dragger.Add(DraggerBody);
 
-        dragger.name = "scrapper-dragger";
+        Dragger.name = "scrapper-dragger";
 
         VisualElement sliderParent = this.Q<VisualElement>("unity-slider");
         StyleEnum<Overflow> overflow = sliderParent.style.overflow;
         overflow.value = Overflow.Visible;
         sliderParent.style.overflow = overflow;
-
-        draggerBody.SendToBack();
 
         VisualElement slidercontainer = sliderParent.Children().ElementAt(0);
         slidercontainer.name = "unity-slider-container";
