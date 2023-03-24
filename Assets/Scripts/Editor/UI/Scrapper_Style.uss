@@ -33,3 +33,18 @@
     border-top-color: rgb(219, 175, 104);
     border-bottom-color: rgb(219, 175, 104);
 }
+
+#unity-tracker {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dragger-body {
+    height: 100%;
+    background-color: rgb(219, 175, 104);
+    transform-origin: top;
+}
+
+.unity-base-slider__dragger:hover .dragger-body {
+    height: 100%;
+    background-color: rgb(255, 213, 145);
+}

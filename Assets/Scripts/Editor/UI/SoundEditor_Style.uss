@@ -24,11 +24,6 @@
     border-bottom-color: rgb(214, 161, 94);
 }
 
-.scrapper:hover {
-    background-color: rgb(219, 175, 104);
-    -unity-background-image-tint-color: rgb(219, 175, 104);
-}
-
 .unity-base-slider__dragger:hover {
     border-left-color: rgb(219, 175, 104);
     border-right-color: rgb(219, 175, 104);
