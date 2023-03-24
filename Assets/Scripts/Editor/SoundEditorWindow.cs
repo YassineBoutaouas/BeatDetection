@@ -59,8 +59,6 @@ public class SoundEditorWindow : EditorWindow
     private AudioSource _audioSource;
     private GameObject _audioObject;
 
-    //private DragAndDropManipulator _dragManipulator;
-
     public void CreateGUI()
     {
         #region Visual element
@@ -106,8 +104,6 @@ public class SoundEditorWindow : EditorWindow
         _playButton.clicked += OnPlaySoundFile;
         _pauseButton.clicked += OnPauseSoundFile;
         _stopButton.clicked += OnStopSoundFile;
-
-        //_dragManipulator = new DragAndDropManipulator(_scrapperBody.parent, _scrapperBody, _waveFormContainer);
     }
 
     public void OnGUI()
