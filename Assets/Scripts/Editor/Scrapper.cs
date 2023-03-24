@@ -36,10 +36,14 @@ public class Scrapper : Scroller
 
         dragger.Add(draggerBody);
 
+        dragger.name = "scrapper-dragger";
+
         VisualElement sliderParent = this.Q<VisualElement>("unity-slider");
         StyleEnum<Overflow> overflow = sliderParent.style.overflow;
         overflow.value = Overflow.Visible;
         sliderParent.style.overflow = overflow;
+
+        draggerBody.SendToBack();
 
         VisualElement slidercontainer = sliderParent.Children().ElementAt(0);
         slidercontainer.name = "unity-slider-container";

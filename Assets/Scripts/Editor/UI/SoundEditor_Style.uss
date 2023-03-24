@@ -24,21 +24,23 @@
     border-bottom-color: rgb(214, 161, 94);
 }
 
+.unity-base-slider__dragger#unity-dragger {
+    background-color: rgb(31, 31, 31);
+}
+
+.dragger-body {
+    scale: 1 8;
+    transform-origin: top;
+}
+
 .unity-base-slider__dragger:hover {
-    border-left-color: rgb(219, 175, 104);
-    border-right-color: rgb(219, 175, 104);
-    border-top-color: rgb(219, 175, 104);
-    border-bottom-color: rgb(219, 175, 104);
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
     border-left-width: 1px;
     border-right-width: 1px;
     border-top-width: 1px;
     border-bottom-width: 1px;
-}
-
-.unity-base-slider__dragger {
-    background-color: rgb(123, 102, 70);
-}
-
-.unity-base-slider__tracker {
-    background-color: rgba(219, 175, 104, 0.1);
+    background-color: rgb(31, 31, 31);
 }

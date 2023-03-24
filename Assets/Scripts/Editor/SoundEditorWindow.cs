@@ -28,13 +28,11 @@ public class SoundEditorWindow : EditorWindow
     private VisualElement _waveFormViewPort;
     private VisualElement _waveFormContainer;
 
-    private VisualElement _scrapper;
     private VisualElement _scrapperBody;
 
     private Button _pauseButton;
     private Button _playButton;
     private Button _stopButton;
-
     private Button _selectButton;
 
     private Slider _volumeSlider;
@@ -61,7 +59,7 @@ public class SoundEditorWindow : EditorWindow
     private AudioSource _audioSource;
     private GameObject _audioObject;
 
-    private DragAndDropManipulator _dragManipulator;
+    //private DragAndDropManipulator _dragManipulator;
 
     public void CreateGUI()
     {
@@ -80,16 +78,15 @@ public class SoundEditorWindow : EditorWindow
         _pauseButton = rootVisualElement.Q<Button>("pause-button");
         _playButton = rootVisualElement.Q<Button>("play-button");
         _stopButton = rootVisualElement.Q<Button>("stop-button");
+        _selectButton = rootVisualElement.Q<Button>("audio-select");
 
         _audioField = rootVisualElement.Q<TextField>();
         _audioField.focusable = false;
 
-        _selectButton = rootVisualElement.Q<Button>("audio-select");
 
         _volumeSlider = rootVisualElement.Q<Slider>();
 
-        _scrapper = rootVisualElement.Q<VisualElement>("unity-dragger");
-        _scrapperBody = rootVisualElement.Q<VisualElement>("body");
+        _scrapperBody = rootVisualElement.Q<VisualElement>("dragger-body");
         #endregion
 
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
@@ -110,9 +107,12 @@ public class SoundEditorWindow : EditorWindow
         _pauseButton.clicked += OnPauseSoundFile;
         _stopButton.clicked += OnStopSoundFile;
 
-        _waveFormViewPort.style.color= Color.white;
+        //_dragManipulator = new DragAndDropManipulator(_scrapperBody.parent, _scrapperBody, _waveFormContainer);
+    }
 
-        _dragManipulator = new DragAndDropManipulator(_scrapperBody, _scrapper);
+    public void OnGUI()
+    {
+        _scrapperBody.transform.scale = new Vector3(_scrapperBody.transform.scale.x, _waveFormContainer.resolvedStyle.height);
     }
 
     #region Select methods
@@ -172,7 +172,7 @@ public class SoundEditorWindow : EditorWindow
     private void ChangeVolume(ChangeEvent<float> volume)
     {
         if (_audioSource == null) return;
-        
+
         _audioSource.volume = volume.newValue;
     }
 
