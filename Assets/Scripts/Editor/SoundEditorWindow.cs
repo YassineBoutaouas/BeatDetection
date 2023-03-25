@@ -53,7 +53,7 @@ public class SoundEditorWindow : EditorWindow
     private int _sampleSize;
     #endregion
 
-    private AudioClip _audioClip;
+    private SoundElement _soundElement;
     private AudioSource _audioSource;
     private GameObject _audioObject;
 
@@ -125,36 +125,34 @@ public class SoundEditorWindow : EditorWindow
     {
         if (!_isPlaying) return;
 
-        _scrapper.value = _audioSource.time / _audioClip.length;
-
-        //Debug.Log($"{_audioClip.length}; {_audioSource.time}");
+        _scrapper.value = _audioSource.time / _soundElement.AudioClip.length;
     }
 
     #region Time methods
     private void OnUpdateCurrentTime(float time)
     {
-        if (_audioClip == null) return;
+        if (_soundElement == null) return;
 
-        _currentTimeStamp = _audioClip.length * time;
+        _currentTimeStamp = _soundElement.AudioClip.length * time;
 
         _scrollView.ScrollTo(_scrapper.Dragger);
     }
     #endregion
 
     #region Select methods
-    private void OnOpenSearchTree() { SearchWindow.Open(new SearchWindowContext(Mouse.current.position.ReadValue()), _soundFileSearchProvider); }
+    private void OnOpenSearchTree() { SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Mouse.current.position.ReadValue())), _soundFileSearchProvider); }
 
-    private void OnSelectSoundFile(AudioClip audioClip)
+    private void OnSelectSoundFile(SoundElement soundElement)
     {
-        if (audioClip != null)
+        if (soundElement != null)
         {
             _audioSource.Stop();
             _isPlaying = false;
         }
 
-        _audioClip = audioClip;
-        _audioField.value = _audioClip.name;
-        _audioSource.clip = _audioClip;
+        _soundElement = soundElement;
+        _audioField.value = _soundElement.name;
+        _audioSource.clip = soundElement.AudioClip;
 
         DrawWaveForm();
 
@@ -169,10 +167,10 @@ public class SoundEditorWindow : EditorWindow
     {
         float t = Time.realtimeSinceStartup;
 
-        _sampleSize = _audioClip.samples * _audioClip.channels;
+        _sampleSize = _soundElement.AudioClip.samples * _soundElement.AudioClip.channels;
         _sampleArray = new float[_sampleSize];
 
-        _audioClip.GetData(_sampleArray, 0);
+        _soundElement.AudioClip.GetData(_sampleArray, 0);
 
         int compressedSize = _sampleSize / _waveFormResolution[0];
 
@@ -264,16 +262,16 @@ public class SoundEditorWindow : EditorWindow
 
 public class SoundFileSearchProvider : ScriptableObject, ISearchWindowProvider
 {
-    public System.Action<AudioClip> OnSelectedSoundFile;
+    public System.Action<SoundElement> OnSelectedSoundFile;
     private List<SearchTreeEntry> _searchTree;
 
-    public void Initialize(params Action<AudioClip>[] actions)
+    public void Initialize(params Action<SoundElement>[] actions)
     {
         _searchTree = new List<SearchTreeEntry>();
 
         OnSelectedSoundFile = null;
 
-        foreach (Action<AudioClip> a in actions)
+        foreach (Action<SoundElement> a in actions)
             OnSelectedSoundFile += a;
     }
 
@@ -283,13 +281,13 @@ public class SoundFileSearchProvider : ScriptableObject, ISearchWindowProvider
     {
         _searchTree.Clear();
 
-        _searchTree.Add(new SearchTreeGroupEntry(new GUIContent("AudioClips"), 0));
+        _searchTree.Add(new SearchTreeGroupEntry(new GUIContent("SoundElements"), 0));
 
-        foreach (string guid in AssetDatabase.FindAssets("t:" + typeof(AudioClip).Name))
+        foreach (string guid in AssetDatabase.FindAssets("t:" + typeof(SoundElement).Name))
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
 
-            AudioClip soundFile = (AudioClip)AssetDatabase.LoadAssetAtPath(path, typeof(AudioClip));
+            SoundElement soundFile = (SoundElement)AssetDatabase.LoadAssetAtPath(path, typeof(SoundElement));
 
             SearchTreeEntry entry = new SearchTreeEntry(new GUIContent(soundFile.name));
             entry.level = 1;
@@ -302,7 +300,7 @@ public class SoundFileSearchProvider : ScriptableObject, ISearchWindowProvider
 
     public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
     {
-        OnSelectedSoundFile?.Invoke((AudioClip)SearchTreeEntry.userData);
+        OnSelectedSoundFile?.Invoke((SoundElement)SearchTreeEntry.userData);
         return true;
     }
 }

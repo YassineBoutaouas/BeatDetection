@@ -2,10 +2,12 @@
     <Style src="project://database/Assets/Scripts/Editor/UI/SoundEditor_Style.uss?fileID=7433441132597879392&amp;guid=6d7776cc52378ed4b9f604b29bd908af&amp;type=3#SoundEditor_Style" />
     <SplitView name="splitview" fixed-pane-initial-dimension="800">
         <ui:VisualElement name="soundwindow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:Label tabindex="-1" text="Blackboard" display-tooltip-when-elided="true" name="main-label" picking-mode="Ignore" style="font-size: 14px; padding-top: 2px; padding-bottom: 5%;" />
-            <ui:TextField picking-mode="Ignore" label="Sound File" value="None" name="audio-field" readonly="true">
-                <ui:Button text="Select File" display-tooltip-when-elided="true" name="audio-select" style="height: 100%; width: 20%;" />
-            </ui:TextField>
+            <uie:Toolbar name="toolbar" style="margin-bottom: 10px;">
+                <uie:ToolbarButton text="Create New" display-tooltip-when-elided="true" name="create-button" focusable="false" />
+                <uie:ToolbarSpacer name="spacer" />
+                <uie:ToolbarButton text="Select" display-tooltip-when-elided="true" name="audio-select" focusable="false" />
+            </uie:Toolbar>
+            <ui:TextField picking-mode="Ignore" label="Sound File" value="None" name="audio-field" readonly="true" />
             <ui:Slider label="Volume" value="1" high-value="1" name="volume-slider" focusable="false" style="margin-bottom: 10px; margin-top: 5px; width: 79%;" />
             <ui:VisualElement name="main-window" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-top: 5%;">
                 <ui:VisualElement name="amplitude" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.3); align-self: center; align-items: center; max-width: 95%; max-height: 60%; min-width: 95%; min-height: 60%; justify-content: flex-end; flex-direction: column; height: 60%;">
