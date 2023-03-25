@@ -3,7 +3,7 @@
     <SplitView name="splitview" fixed-pane-initial-dimension="800">
         <ui:VisualElement name="soundwindow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
             <uie:Toolbar name="toolbar" style="margin-bottom: 10px;">
-                <uie:ToolbarButton text="Create New" display-tooltip-when-elided="true" name="create-button" focusable="false" />
+                <uie:ToolbarButton text="Create New" display-tooltip-when-elided="true" name="create-audio" focusable="false" />
                 <uie:ToolbarSpacer name="spacer" />
                 <uie:ToolbarButton text="Select" display-tooltip-when-elided="true" name="audio-select" focusable="false" />
             </uie:Toolbar>

@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Scripts/Editor/UI/CreateSoundElement_Style.uss?fileID=7433441132597879392&amp;guid=fbaf3a0bd727846488d653491024af6d&amp;type=3#CreateSoundElement_Style" />
+    <ui:Label tabindex="-1" text="Create New Sound Element" display-tooltip-when-elided="true" name="label" style="font-size: 16px; -unity-font-style: bold; -unity-text-align: upper-center; padding-bottom: 10px;" />
+    <ui:TextField picking-mode="Ignore" label="Name" value="New Sound Element" name="configuration-name" />
+    <uie:ObjectField label="Audio Clip" name="audio-object" allow-scene-objects="false" type="UnityEngine.AudioClip, UnityEngine.AudioModule" />
+    <ui:VisualElement name="path-container" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0);">
+        <ui:Label tabindex="-1" text="Path" display-tooltip-when-elided="true" name="path-label" style="margin-left: 5px; background-color: rgb(42, 42, 42);" />
+        <ui:Button text="Change Path" display-tooltip-when-elided="true" focusable="false" name="path-button" />
+    </ui:VisualElement>
+    <ui:VisualElement name="button-container" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: center; padding-top: 10px;">
+        <ui:Button text="Save Asset" display-tooltip-when-elided="true" name="save-button" focusable="false" />
+        <ui:Button text="Cancel" display-tooltip-when-elided="true" name="cancel-button" focusable="false" />
+    </ui:VisualElement>
+</ui:UXML>

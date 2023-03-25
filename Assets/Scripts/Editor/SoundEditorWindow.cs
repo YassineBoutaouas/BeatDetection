@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -29,7 +30,9 @@ public class SoundEditorWindow : EditorWindow
     private Button _pauseButton;
     private Button _playButton;
     private Button _stopButton;
-    private Button _selectButton;
+
+    private ToolbarButton _createButton;
+    private ToolbarButton _selectButton;
 
     private Scrapper _scrapper;
     private ScrollView _scrollView;
@@ -78,7 +81,9 @@ public class SoundEditorWindow : EditorWindow
         _pauseButton = rootVisualElement.Q<Button>("pause-button");
         _playButton = rootVisualElement.Q<Button>("play-button");
         _stopButton = rootVisualElement.Q<Button>("stop-button");
-        _selectButton = rootVisualElement.Q<Button>("audio-select");
+
+        _createButton = rootVisualElement.Q<ToolbarButton>("create-audio");
+        _selectButton = rootVisualElement.Q<ToolbarButton>("audio-select");
 
         _audioField = rootVisualElement.Q<TextField>();
         _audioField.focusable = false;
@@ -96,15 +101,18 @@ public class SoundEditorWindow : EditorWindow
 
         _soundFileSearchProvider.Initialize(OnSelectSoundFile);
 
+        #region Audio Waves
         _waveFormTexture = new Texture2D(_waveFormResolution[0], _waveFormResolution[1], TextureFormat.RGBA32, true);
         _wavesArray = new float[_waveFormResolution[0]];
 
         _audioObject = new GameObject("Temp_AudioObject");
         _audioSource = _audioObject.AddComponent<AudioSource>();
         _audioSource.loop = false;
+        #endregion
 
         _volumeSlider.RegisterCallback<ChangeEvent<float>>(ChangeVolume);
 
+        _createButton.clicked += CreateSoundElement;
         _selectButton.clicked += OnOpenSearchTree;
 
         _playButton.clicked += OnPlaySoundFile;
@@ -141,6 +149,8 @@ public class SoundEditorWindow : EditorWindow
 
     #region Select methods
     private void OnOpenSearchTree() { SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Mouse.current.position.ReadValue())), _soundFileSearchProvider); }
+
+    private void CreateSoundElement() { CreateSoundElementWindow.OpenWindow(OnSelectSoundFile); }
 
     private void OnSelectSoundFile(SoundElement soundElement)
     {
