@@ -127,7 +127,7 @@ public class SoundEditorWindow : EditorWindow
 
         _scrapper.value = _audioSource.time / _audioClip.length;
 
-        Debug.Log($"{_audioClip.length}; {_audioSource.time}");
+        //Debug.Log($"{_audioClip.length}; {_audioSource.time}");
     }
 
     #region Time methods
