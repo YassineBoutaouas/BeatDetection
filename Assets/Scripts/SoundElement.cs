@@ -11,6 +11,7 @@ public class SoundElement : ScriptableObject
     public List<SoundEvent> SoundEvents = new List<SoundEvent>();
 }
 
+[Serializable]
 public class SoundEvent
 {
     public string MethodName;
