@@ -32,6 +32,7 @@ public class SoundEditorWindow : EditorWindow
     private Button _selectButton;
 
     private Scrapper _scrapper;
+    private ScrollView _scrollView;
     private Slider _volumeSlider;
 
     private TextField _audioField;
@@ -57,7 +58,8 @@ public class SoundEditorWindow : EditorWindow
     private GameObject _audioObject;
 
     private float _currentTimeStamp;
-    TextField relativeTime;
+    private TextField relativeTime;
+    private bool _isPlaying;
 
     private void InitFields()
     {
@@ -70,6 +72,8 @@ public class SoundEditorWindow : EditorWindow
         _mainWindow = rootVisualElement.Q<VisualElement>("main-window");
 
         _waveFormContainer = rootVisualElement.Q<VisualElement>("wave-container");
+
+        _scrollView = rootVisualElement.Q<ScrollView>();
 
         _pauseButton = rootVisualElement.Q<Button>("pause-button");
         _playButton = rootVisualElement.Q<Button>("play-button");
@@ -107,16 +111,23 @@ public class SoundEditorWindow : EditorWindow
         _pauseButton.clicked += OnPauseSoundFile;
         _stopButton.clicked += OnStopSoundFile;
 
-
         relativeTime = new TextField("Relative Time");
         _mainWindow.Add(relativeTime);
         _scrapper.valueChanged += OnUpdateCurrentTime;
-
     }
 
     public void OnGUI()
     {
         _scrapper.DraggerBody.transform.scale = new Vector3(_scrapper.DraggerBody.transform.scale.x, _waveFormContainer.resolvedStyle.height);
+    }
+
+    public void Update()
+    {
+        if (!_isPlaying) return;
+
+        _scrapper.value = _audioSource.time / _audioClip.length;
+
+        Debug.Log($"{_audioClip.length}; {_audioSource.time}");
     }
 
     #region Time methods
@@ -126,7 +137,7 @@ public class SoundEditorWindow : EditorWindow
 
         _currentTimeStamp = _audioClip.length * time;
 
-        relativeTime.value = $"{_currentTimeStamp}; {time}";
+        _scrollView.ScrollTo(_scrapper.Dragger);
     }
     #endregion
 
@@ -135,6 +146,12 @@ public class SoundEditorWindow : EditorWindow
 
     private void OnSelectSoundFile(AudioClip audioClip)
     {
+        if (audioClip != null)
+        {
+            _audioSource.Stop();
+            _isPlaying = false;
+        }
+
         _audioClip = audioClip;
         _audioField.value = _audioClip.name;
         _audioSource.clip = _audioClip;
@@ -144,6 +161,8 @@ public class SoundEditorWindow : EditorWindow
         _scrapper.value = 0;
 
         OnUpdateCurrentTime(0);
+
+        _scrollView.horizontalScroller.value = 0;
     }
 
     private void DrawWaveForm()
@@ -199,7 +218,10 @@ public class SoundEditorWindow : EditorWindow
     {
         if (_audioSource == null) return;
 
+        _audioSource.time = _currentTimeStamp;
         _audioSource.Play();
+
+        _isPlaying = true;
     }
 
     private void OnPauseSoundFile()
@@ -207,6 +229,8 @@ public class SoundEditorWindow : EditorWindow
         if (_audioSource == null) return;
 
         _audioSource.Pause();
+
+        _isPlaying = false;
     }
 
     private void OnStopSoundFile()
@@ -217,6 +241,9 @@ public class SoundEditorWindow : EditorWindow
 
         _scrapper.value = 0;
         OnUpdateCurrentTime(0);
+        _scrollView.horizontalScroller.value = 0;
+
+        _isPlaying = false;
     }
     #endregion
 
