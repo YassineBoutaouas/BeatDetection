@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Lofi
   AudioClip: {fileID: 8300000, guid: 8d140728798782d4d8102834eb7f8617, type: 3}
+  SoundEvents: []

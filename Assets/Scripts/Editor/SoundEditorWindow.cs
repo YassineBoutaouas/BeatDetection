@@ -27,6 +27,8 @@ public class SoundEditorWindow : EditorWindow
     private VisualElement _mainWindow;
     private VisualElement _waveFormContainer;
 
+    private VisualElement _eventContainer;
+
     private Button _pauseButton;
     private Button _playButton;
     private Button _stopButton;
@@ -61,8 +63,9 @@ public class SoundEditorWindow : EditorWindow
     private GameObject _audioObject;
 
     private float _currentTimeStamp;
-    private TextField relativeTime;
     private bool _isPlaying;
+
+    private ContextualMenuManipulator _contextManipulator;
 
     private void InitFields()
     {
@@ -73,8 +76,8 @@ public class SoundEditorWindow : EditorWindow
         rootVisualElement.styleSheets.Add(styleSheet);
 
         _mainWindow = rootVisualElement.Q<VisualElement>("main-window");
-
         _waveFormContainer = rootVisualElement.Q<VisualElement>("wave-container");
+        _eventContainer = rootVisualElement.Q<VisualElement>("event-container");
 
         _scrollView = rootVisualElement.Q<ScrollView>();
 
@@ -89,7 +92,6 @@ public class SoundEditorWindow : EditorWindow
         _audioField.focusable = false;
 
         _volumeSlider = rootVisualElement.Q<Slider>();
-
         _scrapper = rootVisualElement.Q<Scrapper>();
 
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
@@ -110,18 +112,22 @@ public class SoundEditorWindow : EditorWindow
         _audioSource.loop = false;
         #endregion
 
-        _volumeSlider.RegisterCallback<ChangeEvent<float>>(ChangeVolume);
-
+        #region SounElement Buttons Callbacks
         _createButton.clicked += CreateSoundElement;
         _selectButton.clicked += OnOpenSearchTree;
+        #endregion
 
+        #region Audio Buttons callbacks
+        _volumeSlider.RegisterCallback<ChangeEvent<float>>(ChangeVolume);
         _playButton.clicked += OnPlaySoundFile;
         _pauseButton.clicked += OnPauseSoundFile;
         _stopButton.clicked += OnStopSoundFile;
+        #endregion
 
-        relativeTime = new TextField("Relative Time");
-        _mainWindow.Add(relativeTime);
         _scrapper.valueChanged += OnUpdateCurrentTime;
+
+        _contextManipulator = new ContextualMenuManipulator(CreateEventContext);
+        _eventContainer.AddManipulator(_contextManipulator);
     }
 
     public void OnGUI()
@@ -131,9 +137,30 @@ public class SoundEditorWindow : EditorWindow
 
     public void Update()
     {
-        if (!_isPlaying) return;
+        if (!_isPlaying || _audioSource.clip == null) return;
 
         _scrapper.value = _audioSource.time / _soundElement.AudioClip.length;
+    }
+
+    private void CreateEventContext(ContextualMenuPopulateEvent menuBuilder)
+    {
+        menuBuilder.menu.AppendAction("Add Sound Event", AddEvent, DropdownMenuAction.Status.Normal);
+        menuBuilder.menu.AppendAction("Remove Sound Event", RemoveEvent, DropdownMenuAction.Status.Normal);
+    }
+
+    private void AddEvent(DropdownMenuAction menuAction)
+    {
+        if(_soundElement == null) return;
+
+        //_soundElement.AudioClip.length* time;
+        
+
+    }
+
+    private void RemoveEvent(DropdownMenuAction menuAction)
+    {
+        if (_soundElement == null) return;
+
     }
 
     #region Time methods
@@ -267,6 +294,22 @@ public class SoundEditorWindow : EditorWindow
         _soundFileSearchProvider.OnRelease();
 
         GameObject.DestroyImmediate(_audioObject);
+    }
+}
+
+public class EventElement : VisualElement
+{
+    public SoundEvent _soundEvent;
+
+    public EventElement(SoundEvent soundEvent)
+    {
+        name = "event-element";
+        style.flexGrow = 0;
+        style.width = 3;
+
+        focusable = true;
+
+        _soundEvent = soundEvent;
     }
 }
 

@@ -50,7 +50,7 @@ public class CreateSoundElementWindow : EditorWindow
         _audioField = rootVisualElement.Q<ObjectField>("audio-object");
 
         _changePath.clicked += SelectPath;
-        _saveAsset.clicked += SaveNewConfig;
+        _saveAsset.clicked += SaveNewSoundElement;
         _cancel.clicked += Close;
     }
 
@@ -63,7 +63,7 @@ public class CreateSoundElementWindow : EditorWindow
         _pathLabel.text = _selectedPath;
     }
 
-    private void SaveNewConfig()
+    private void SaveNewSoundElement()
     {
         if (_selectedPath == null)
         {
@@ -92,7 +92,7 @@ public class CreateSoundElementWindow : EditorWindow
     private void OnDisable()
     {
         _changePath.clicked -= SelectPath;
-        _saveAsset.clicked -= SaveNewConfig;
+        _saveAsset.clicked -= SaveNewSoundElement;
         _cancel.clicked -= Close;
     }
 }
