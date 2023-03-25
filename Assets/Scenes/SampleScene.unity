@@ -432,84 +432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025c229b96fc5dc4684a1f8340e96cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Curve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.9999988
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.10062314
-      value: 0.99999887
-      inSlope: 0.0000006556511
-      outSlope: 0.0000006556511
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.17705274
-      value: 0.01581037
-      inSlope: 0.0000008000075
-      outSlope: 0.0000008000075
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.24963336
-      value: 0.999999
-      inSlope: 0.0000013254654
-      outSlope: 0.0000013254654
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.40029314
-      value: 0.9999992
-      inSlope: 0.0000016681146
-      outSlope: 0.0000016681146
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.55150276
-      value: 0.99999946
-      inSlope: 0.0000017890134
-      outSlope: 0.0000017890134
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.69996315
-      value: 0.99999976
-      inSlope: 0.0000015947829
-      outSlope: 0.0000015947829
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  SoundFile: {fileID: 0}
 --- !u!1 &937640678
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,5 +543,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bdcfe5ab1e9edfd47bccd7f7ae1e7d51,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1829704877}
   m_SourcePrefab: {fileID: 100100000, guid: bdcfe5ab1e9edfd47bccd7f7ae1e7d51, type: 3}
+--- !u!1 &1829704876 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: bdcfe5ab1e9edfd47bccd7f7ae1e7d51,
+    type: 3}
+  m_PrefabInstance: {fileID: 1829704875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1829704877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829704876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 025c229b96fc5dc4684a1f8340e96cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SoundFile: {fileID: 11400000, guid: 8c60592bc4355414b869971bcf6c53b8, type: 2}
