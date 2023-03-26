@@ -6,7 +6,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 
 public class SoundEditorWindow : EditorWindow
@@ -153,6 +152,7 @@ public class SoundEditorWindow : EditorWindow
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
 
         _eventContainer.RegisterCallback<KeyDownEvent>(RemoveEvent);
+        _eventContainer.RegisterCallback<KeyDownEvent>(JumpTo);
     }
 
     public void CreateGUI()
@@ -204,6 +204,7 @@ public class SoundEditorWindow : EditorWindow
     {
         menuBuilder.menu.AppendAction("Add Sound Event", AddEvent, DropdownMenuAction.Status.Normal);
         menuBuilder.menu.AppendAction("Remove Sound Event", RemoveEvent, DropdownMenuAction.Status.Normal);
+        menuBuilder.menu.AppendAction("Jump to Sound Event", JumpTo, DropdownMenuAction.Status.Normal);
     }
 
     private void AddEvent(DropdownMenuAction menuAction)
@@ -245,6 +246,22 @@ public class SoundEditorWindow : EditorWindow
         _eventContainer.Remove(focus);
 
         SelectEvent();
+    }
+
+    private void JumpTo(KeyDownEvent keydown)
+    {
+        if (keydown.keyCode != KeyCode.F) return;
+
+        JumpTo(menuAction: null);
+    }
+
+    private void JumpTo(DropdownMenuAction menuAction)
+    {
+        EventElement focus = (EventElement)_eventContainer.focusController.focusedElement;
+
+        if (focus == null) return;
+
+        _scrapper.Dragger.transform.position = new Vector3(focus.transform.position.x, 0);
     }
 
     private void SelectEvent()
@@ -430,6 +447,8 @@ public class SoundEditorWindow : EditorWindow
         _stopButton.clicked -= OnStopSoundFile;
 
         _soundFileSearchProvider.OnRelease();
+
+        _eventContainer.UnregisterCallback<KeyDownEvent>(RemoveEvent);
 
         GameObject.DestroyImmediate(_audioObject);
     }
