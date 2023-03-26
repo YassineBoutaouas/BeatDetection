@@ -7,10 +7,13 @@ namespace SoundElements
         public SoundElement SoundFile;
         protected AudioSource _audioSource;
 
+        private int _currentEventIndex;
+
         protected virtual void Start()
         {
             _audioSource = gameObject.AddComponent<AudioSource>();
             _audioSource.clip = SoundFile.AudioClip;
+            _currentEventIndex = 0;
         }
 
         protected virtual void Update() { }
@@ -19,10 +22,13 @@ namespace SoundElements
         {
             if (!_audioSource.isPlaying) return;
 
-            foreach (SoundEvent evt in SoundFile.SoundEvents)
+            for(int i = 0; i < SoundFile.SoundEvents.Count; i++)
             {
-                if (evt.TimeStamp.NearlyEquals(_audioSource.time))
-                    SendMessage(evt.MethodName, evt, SendMessageOptions.DontRequireReceiver);
+                if (SoundFile.SoundEvents[i].TimeStamp.NearlyEquals(_audioSource.time) && _currentEventIndex == i)
+                {
+                    SendMessage(SoundFile.SoundEvents[i].MethodName, SoundFile.SoundEvents[i], SendMessageOptions.DontRequireReceiver);
+                    _currentEventIndex++;
+                }
             }
         }
     }

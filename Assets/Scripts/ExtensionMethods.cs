@@ -14,6 +14,6 @@ public static class ExtensionMethods
         if (x == y)
             return true;
 
-        return diff <= 0.001f || diff <= Math.Max(Math.Abs(x), Math.Abs(y)) * 0.001f;
+        return diff <= 0.001f || diff <= Math.Max(Math.Abs(x), Math.Abs(y)) * 0.0001f;
     }
 }
