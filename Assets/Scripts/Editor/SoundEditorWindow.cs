@@ -102,16 +102,20 @@ public class SoundEditorWindow : EditorWindow
     private int _sampleSize;
     #endregion
 
+    #region Sound element references
     private SoundElement _soundElement;
     private AudioSource _audioSource;
     private GameObject _audioObject;
 
     private float _currentTimeStamp;
     private bool _isPlaying;
+    #endregion
 
+    #region Subeditors and manipulators
     private SoundFileSearchProvider _soundFileSearchProvider;
     private ContextualMenuManipulator _contextManipulator;
     private Clickable _clickable;
+    #endregion
 
     private SerializedObject _serializedObject;
 
