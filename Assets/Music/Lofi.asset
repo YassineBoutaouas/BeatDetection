@@ -14,4 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Lofi
   AudioClip: {fileID: 8300000, guid: 8d140728798782d4d8102834eb7f8617, type: 3}
-  SoundEvents: []
+  SoundEvents:
+  - MethodName: Method1
+    TimeStamp: 10.035075
+    FloatValue: 0
+    IntValue: 0
+    StringValue: 
+    BoolValue: 0
+  - MethodName: Method2
+    TimeStamp: 21.919703
+    FloatValue: 0
+    IntValue: 0
+    StringValue: 
+    BoolValue: 0
+  - MethodName: Method3
+    TimeStamp: 121.77057
+    FloatValue: 0
+    IntValue: 0
+    StringValue: 
+    BoolValue: 0

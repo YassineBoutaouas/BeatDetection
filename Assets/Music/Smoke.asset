@@ -14,4 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Smoke
   AudioClip: {fileID: 8300000, guid: 9de95b4116ae5d44b876012e7ce18853, type: 3}
-  SoundEvents: []
+  SoundEvents:
+  - MethodName: Method1
+    TimeStamp: 18.391241
+    FloatValue: 0
+    IntValue: 0
+    StringValue: 
+    BoolValue: 0

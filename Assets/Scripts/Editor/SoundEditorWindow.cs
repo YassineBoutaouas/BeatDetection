@@ -6,6 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 
 public class SoundEditorWindow : EditorWindow
@@ -150,6 +151,8 @@ public class SoundEditorWindow : EditorWindow
         _eventProperties = new EventProperties(_inspectorView);
 
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
+
+        _eventContainer.RegisterCallback<KeyDownEvent>(RemoveEvent);
     }
 
     public void CreateGUI()
@@ -187,10 +190,7 @@ public class SoundEditorWindow : EditorWindow
         _eventContainer.AddManipulator(_clickable);
     }
 
-    public void OnGUI()
-    {
-        _scrapper.DraggerBody.transform.scale = new Vector3(_scrapper.DraggerBody.transform.scale.x, _waveFormContainer.resolvedStyle.height);
-    }
+    public void OnGUI() { _scrapper.DraggerBody.transform.scale = new Vector3(_scrapper.DraggerBody.transform.scale.x, _waveFormContainer.resolvedStyle.height); }
 
     public void Update()
     {
@@ -226,6 +226,13 @@ public class SoundEditorWindow : EditorWindow
         _serializedObject.ApplyModifiedProperties();
 
         SelectEvent();
+    }
+
+    private void RemoveEvent(KeyDownEvent keydown)
+    {
+        if (keydown.keyCode != KeyCode.Delete) return;
+
+        RemoveEvent(menuAction: null);
     }
 
     private void RemoveEvent(DropdownMenuAction menuAction)
@@ -265,6 +272,23 @@ public class SoundEditorWindow : EditorWindow
 
         _inspectorView.visible = true;
     }
+
+    private void PopulateEvents()
+    {
+        _eventContainer.Clear();
+        _inspectorView.visible = false;
+
+        if (_soundElement == null) return;
+
+        foreach (SoundEvent evt in _soundElement.SoundEvents)
+        {
+            EventElement evtElement = new EventElement(evt);
+            evtElement.transform.position = new Vector3(CalculateRelativePositionInWindow(evt.TimeStamp), 0);
+            evtElement.AddToClassList("event-element");
+
+            _eventContainer.Add(evtElement);
+        }
+    }
     #endregion
 
     #region Time methods
@@ -279,6 +303,11 @@ public class SoundEditorWindow : EditorWindow
     #endregion
 
     #region Select methods
+    private float CalculateRelativePositionInWindow(float t)
+    {
+        return _waveFormContainer.style.width.value.value * (t / _soundElement.AudioClip.length);
+    }
+
     private void OnOpenSearchTree() { SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Mouse.current.position.ReadValue())), _soundFileSearchProvider); }
 
     private void CreateSoundElement() { CreateSoundElementWindow.OpenWindow(OnSelectSoundFile); }
@@ -305,6 +334,8 @@ public class SoundEditorWindow : EditorWindow
 
         _serializedObject = new SerializedObject(_soundElement);
         _eventProperties.BindObject(_serializedObject);
+
+        PopulateEvents();
     }
 
     private void DrawWaveForm()
@@ -413,6 +444,9 @@ public class EventElement : VisualElement
         name = "event-element";
         style.flexGrow = 0;
         style.width = 3;
+        style.height = 100;
+
+        style.position = Position.Absolute;
 
         focusable = true;
         usageHints = UsageHints.DynamicTransform;
