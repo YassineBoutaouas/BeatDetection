@@ -8,7 +8,8 @@ public class SoundElement : ScriptableObject
 {
     public string Name;
     public AudioClip AudioClip;
-    public List<SoundEvent> SoundEvents = new List<SoundEvent>();
+
+    [NonReorderable] public List<SoundEvent> SoundEvents = new List<SoundEvent>();
 }
 
 [Serializable]
@@ -22,4 +23,9 @@ public class SoundEvent
     public int IntValue;
     public string StringValue;
     public bool BoolValue;
+
+    public SoundEvent(float timeStamp)
+    {
+        TimeStamp = timeStamp;
+    }
 }

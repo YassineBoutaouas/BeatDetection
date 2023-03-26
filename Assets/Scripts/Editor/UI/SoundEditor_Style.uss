@@ -44,3 +44,23 @@
     border-bottom-width: 1px;
     background-color: rgb(31, 31, 31);
 }
+
+.event-element:hover {
+    background-color: rgb(219, 175, 104);
+}
+
+.event-element:focus {
+    background-color: rgb(255, 218, 157);
+    border-left-color: rgb(219, 175, 104);
+    border-right-color: rgb(219, 175, 104);
+    border-top-color: rgb(219, 175, 104);
+    border-bottom-color: rgb(219, 175, 104);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+.event-element {
+    background-color: rgb(255, 255, 255);
+}

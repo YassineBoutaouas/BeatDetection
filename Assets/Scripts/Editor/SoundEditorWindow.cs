@@ -1,7 +1,8 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -43,6 +44,9 @@ public class SoundEditorWindow : EditorWindow
     private TextField _audioField;
 
     private SoundFileSearchProvider _soundFileSearchProvider;
+
+    private InspectorView _inspectorView;
+    private PropertyField _propertyField;
     #endregion
 
     #region Wave form
@@ -66,6 +70,8 @@ public class SoundEditorWindow : EditorWindow
     private bool _isPlaying;
 
     private ContextualMenuManipulator _contextManipulator;
+
+    private SerializedObject _serializedObject;
 
     private void InitFields()
     {
@@ -93,6 +99,9 @@ public class SoundEditorWindow : EditorWindow
 
         _volumeSlider = rootVisualElement.Q<Slider>();
         _scrapper = rootVisualElement.Q<Scrapper>();
+
+        _inspectorView = rootVisualElement.Q<InspectorView>();
+        _propertyField = rootVisualElement.Q<PropertyField>();
 
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
     }
@@ -150,17 +159,48 @@ public class SoundEditorWindow : EditorWindow
 
     private void AddEvent(DropdownMenuAction menuAction)
     {
-        if(_soundElement == null) return;
+        if (_soundElement == null) return;
 
-        //_soundElement.AudioClip.length* time;
-        
+        SoundEvent soundEvent = new SoundEvent(_currentTimeStamp);
+        _soundElement.SoundEvents.Add(soundEvent);
 
+        EventElement evtElement = new EventElement(soundEvent);
+
+        evtElement.transform.position = new Vector3(_scrapper.Dragger.transform.position.x, 0);
+        evtElement.AddToClassList("event-element");
+
+        _eventContainer.Add(evtElement);
+
+        evtElement.Focus();
+
+        _serializedObject.Update();
+        _serializedObject.ApplyModifiedProperties();
+
+        SelectEvent();
     }
 
     private void RemoveEvent(DropdownMenuAction menuAction)
     {
-        if (_soundElement == null) return;
+        EventElement focus = (EventElement)_eventContainer.focusController.focusedElement;
 
+        if (focus == null) return;
+
+        _soundElement.SoundEvents.Remove(focus._soundEvent);
+        _eventContainer.Remove(focus);
+    }
+
+    private void SelectEvent()
+    {
+        EventElement focus = (EventElement)_eventContainer.focusController.focusedElement;
+
+        if (focus == null) return;
+
+        int i = _soundElement.SoundEvents.IndexOf(focus._soundEvent);
+
+        SerializedProperty prop = _serializedObject.FindProperty(nameof(SoundElement.SoundEvents)).GetArrayElementAtIndex(i);
+
+        _propertyField.BindProperty(prop);
+        _serializedObject.ApplyModifiedProperties();
     }
 
     #region Time methods
@@ -198,6 +238,9 @@ public class SoundEditorWindow : EditorWindow
         OnUpdateCurrentTime(0);
 
         _scrollView.horizontalScroller.value = 0;
+
+        _serializedObject = new SerializedObject(_soundElement);
+        _propertyField.Bind(_serializedObject);
     }
 
     private void DrawWaveForm()
@@ -308,6 +351,7 @@ public class EventElement : VisualElement
         style.width = 3;
 
         focusable = true;
+        usageHints = UsageHints.DynamicTransform;
 
         _soundEvent = soundEvent;
     }
