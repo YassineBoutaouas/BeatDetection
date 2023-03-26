@@ -1,8 +1,6 @@
 #if UNITY_EDITOR
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -43,10 +41,52 @@ public class SoundEditorWindow : EditorWindow
 
     private TextField _audioField;
 
-    private SoundFileSearchProvider _soundFileSearchProvider;
 
     private InspectorView _inspectorView;
-    private PropertyField _propertyField;
+    private EventProperties _eventProperties;
+
+    private class EventProperties
+    {
+        public PropertyField MethodName;
+        public PropertyField FloatValue;
+        public PropertyField IntValue;
+        public PropertyField StringValue;
+        public PropertyField BoolValue;
+
+        public EventProperties(InspectorView container)
+        {
+            MethodName = new PropertyField { name = "method-property" };
+            MethodName.style.marginTop = 10;
+            FloatValue = new PropertyField { name = "float-property" };
+            IntValue = new PropertyField { name = "int-property" };
+            StringValue = new PropertyField { name = "string-property" };
+            BoolValue = new PropertyField { name = "bool-property" };
+
+            container.Add(MethodName);
+            container.Add(FloatValue);
+            container.Add(IntValue);
+            container.Add(StringValue);
+            container.Add(BoolValue);
+        }
+
+        public void BindObject(SerializedObject obj)
+        {
+            MethodName.Bind(obj);
+            FloatValue.Bind(obj);
+            IntValue.Bind(obj);
+            StringValue.Bind(obj);
+            BoolValue.Bind(obj);
+        }
+
+        public void BindProperties(SerializedProperty method, SerializedProperty floatProp, SerializedProperty intProp, SerializedProperty stringProp, SerializedProperty boolProp)
+        {
+            MethodName.BindProperty(method);
+            FloatValue.BindProperty(floatProp);
+            IntValue.BindProperty(intProp);
+            StringValue.BindProperty(stringProp);
+            BoolValue.BindProperty(boolProp);
+        }
+    }
     #endregion
 
     #region Wave form
@@ -69,7 +109,9 @@ public class SoundEditorWindow : EditorWindow
     private float _currentTimeStamp;
     private bool _isPlaying;
 
+    private SoundFileSearchProvider _soundFileSearchProvider;
     private ContextualMenuManipulator _contextManipulator;
+    private Clickable _clickable;
 
     private SerializedObject _serializedObject;
 
@@ -101,7 +143,7 @@ public class SoundEditorWindow : EditorWindow
         _scrapper = rootVisualElement.Q<Scrapper>();
 
         _inspectorView = rootVisualElement.Q<InspectorView>();
-        _propertyField = rootVisualElement.Q<PropertyField>();
+        _eventProperties = new EventProperties(_inspectorView);
 
         _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
     }
@@ -137,6 +179,8 @@ public class SoundEditorWindow : EditorWindow
 
         _contextManipulator = new ContextualMenuManipulator(CreateEventContext);
         _eventContainer.AddManipulator(_contextManipulator);
+        _clickable = new Clickable(SelectEvent, 0, 0);
+        _eventContainer.AddManipulator(_clickable);
     }
 
     public void OnGUI()
@@ -151,6 +195,7 @@ public class SoundEditorWindow : EditorWindow
         _scrapper.value = _audioSource.time / _soundElement.AudioClip.length;
     }
 
+    #region Event methods
     private void CreateEventContext(ContextualMenuPopulateEvent menuBuilder)
     {
         menuBuilder.menu.AppendAction("Add Sound Event", AddEvent, DropdownMenuAction.Status.Normal);
@@ -187,21 +232,36 @@ public class SoundEditorWindow : EditorWindow
 
         _soundElement.SoundEvents.Remove(focus._soundEvent);
         _eventContainer.Remove(focus);
+
+        SelectEvent();
     }
 
     private void SelectEvent()
     {
         EventElement focus = (EventElement)_eventContainer.focusController.focusedElement;
 
-        if (focus == null) return;
+        if (focus == null)
+        {
+            _inspectorView.visible = false;
+            return;
+        }
 
         int i = _soundElement.SoundEvents.IndexOf(focus._soundEvent);
 
         SerializedProperty prop = _serializedObject.FindProperty(nameof(SoundElement.SoundEvents)).GetArrayElementAtIndex(i);
 
-        _propertyField.BindProperty(prop);
+        _eventProperties.BindProperties(
+            prop.FindPropertyRelative(nameof(SoundEvent.MethodName)),
+            prop.FindPropertyRelative(nameof(SoundEvent.FloatValue)),
+            prop.FindPropertyRelative(nameof(SoundEvent.IntValue)),
+            prop.FindPropertyRelative(nameof(SoundEvent.StringValue)),
+            prop.FindPropertyRelative(nameof(SoundEvent.BoolValue)));
+
         _serializedObject.ApplyModifiedProperties();
+
+        _inspectorView.visible = true;
     }
+    #endregion
 
     #region Time methods
     private void OnUpdateCurrentTime(float time)
@@ -240,7 +300,7 @@ public class SoundEditorWindow : EditorWindow
         _scrollView.horizontalScroller.value = 0;
 
         _serializedObject = new SerializedObject(_soundElement);
-        _propertyField.Bind(_serializedObject);
+        _eventProperties.BindObject(_serializedObject);
     }
 
     private void DrawWaveForm()
