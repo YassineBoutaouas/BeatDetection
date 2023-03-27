@@ -1,5 +1,3 @@
-
-
 using UnityEngine;
 
 namespace SoundElements
@@ -10,7 +8,7 @@ namespace SoundElements
         {
             base.Start();
 
-            _audioSource.Play();
+            Play();
         }
 
         protected override void Update()
@@ -18,9 +16,9 @@ namespace SoundElements
             UpdateEvents();
         }
 
-        protected void OnSoundEvent()
+        public void OnDrop()
         {
-            Debug.Log("Sound Event");
+            Debug.Log("On Drop");
         }
     }
 }

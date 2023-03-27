@@ -10,25 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df05dc63a6e3b254496f912406b0297a, type: 3}
-  m_Name: Lofi
+  m_Name: Sample_Beat
   m_EditorClassIdentifier: 
-  Name: Lofi
-  AudioClip: {fileID: 8300000, guid: 8d140728798782d4d8102834eb7f8617, type: 3}
+  Name: Sample_Beat
+  AudioClip: {fileID: 8300000, guid: 9de95b4116ae5d44b876012e7ce18853, type: 3}
   SoundEvents:
-  - MethodName: Method1
-    TimeStamp: 10.035075
-    FloatValue: 0
-    IntValue: 0
-    StringValue: 
-    BoolValue: 0
-  - MethodName: Method2
-    TimeStamp: 21.919703
-    FloatValue: 0
-    IntValue: 0
-    StringValue: 
-    BoolValue: 0
-  - MethodName: Method3
-    TimeStamp: 121.77057
+  - MethodName: OnDrop
+    TimeStamp: 18.284245
     FloatValue: 0
     IntValue: 0
     StringValue: 

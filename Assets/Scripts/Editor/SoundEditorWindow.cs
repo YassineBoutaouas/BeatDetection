@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -21,6 +22,19 @@ namespace SoundElements.Editor
         {
             SoundEditorWindow wnd = GetWindow<SoundEditorWindow>();
             wnd.titleContent = new GUIContent("Sound Editor");
+        }
+
+        [OnOpenAsset]
+        public static bool OnOpenAsset(int instanceID, int line)
+        {
+            if (Selection.activeObject is SoundElement)
+            {
+                SoundEditorWindow wnd = GetWindow<SoundEditorWindow>();
+                wnd.titleContent = new GUIContent("Sound Editor");
+                wnd.OnSelectSoundFile((SoundElement)Selection.activeObject);
+                return true;
+            }
+            return false;
         }
         #endregion
 
@@ -190,6 +204,8 @@ namespace SoundElements.Editor
             _eventContainer.AddManipulator(_contextManipulator);
             _clickable = new Clickable(SelectEvent, 0, 0);
             _eventContainer.AddManipulator(_clickable);
+
+            EditorApplication.playModeStateChanged += OnPlayModeChange;
         }
 
         public void OnGUI() { _scrapper.DraggerBody.transform.scale = new Vector3(_scrapper.DraggerBody.transform.scale.x, _waveFormContainer.resolvedStyle.height); }
@@ -199,6 +215,27 @@ namespace SoundElements.Editor
             if (!_isPlaying || _audioSource.clip == null) return;
 
             _scrapper.value = _audioSource.time / _soundElement.AudioClip.length;
+        }
+
+        private void OnPlayModeChange(PlayModeStateChange playMode)
+        {
+            switch (playMode)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    break;
+                case PlayModeStateChange.ExitingEditMode:
+                    if (_audioObject != null) DestroyImmediate(_audioObject);
+                    Close();
+                    break;
+                case PlayModeStateChange.EnteredPlayMode:
+                    if(_audioObject != null) DestroyImmediate(_audioObject);
+                    Close();
+                    break;
+                case PlayModeStateChange.ExitingPlayMode:
+                    break;
+                default:
+                    break;
+            }
         }
 
         #region Event methods
@@ -449,6 +486,8 @@ namespace SoundElements.Editor
             _soundFileSearchProvider.OnRelease();
 
             _eventContainer.UnregisterCallback<KeyDownEvent>(RemoveEvent);
+
+            EditorApplication.playModeStateChanged -= OnPlayModeChange;
 
             GameObject.DestroyImmediate(_audioObject);
         }

@@ -6,28 +6,41 @@ namespace SoundElements
     {
         public SoundElement SoundFile;
         protected AudioSource _audioSource;
-
-        private int _currentEventIndex;
+        public float CurrentEventIndex { get; private set; }
+        public float CurrentTime { get { return _audioSource.time; } private set { CurrentTime = value; } }
 
         protected virtual void Start()
         {
             _audioSource = gameObject.AddComponent<AudioSource>();
             _audioSource.clip = SoundFile.AudioClip;
-            _currentEventIndex = 0;
+        }
+
+        public void Play()
+        {
+            CurrentEventIndex = 0;
+            _audioSource.Play();
         }
 
         protected virtual void Update() { }
 
         protected virtual void UpdateEvents()
         {
-            if (!_audioSource.isPlaying) return;
-
-            for(int i = 0; i < SoundFile.SoundEvents.Count; i++)
+            if (!_audioSource.isPlaying)
             {
-                if (SoundFile.SoundEvents[i].TimeStamp.NearlyEquals(_audioSource.time) && _currentEventIndex == i)
+                CurrentTime = 0;
+                return;
+            }
+
+            for (int i = 0; i < SoundFile.SoundEvents.Count; i++)
+            {
+                if (CurrentEventIndex != i) continue;
+
+                SoundEvent e = SoundFile.SoundEvents[i];
+
+                if (e.TimeStamp >= CurrentTime)
                 {
-                    SendMessage(SoundFile.SoundEvents[i].MethodName, SoundFile.SoundEvents[i], SendMessageOptions.DontRequireReceiver);
-                    _currentEventIndex++;
+                    SendMessage(e.MethodName, e, SendMessageOptions.DontRequireReceiver);
+                    CurrentEventIndex++;
                 }
             }
         }
