@@ -37,7 +37,7 @@ namespace SoundElements
 
                 SoundEvent e = SoundFile.SoundEvents[i];
 
-                if (e.TimeStamp >= CurrentTime)
+                if (e.TimeStamp < CurrentTime)
                 {
                     SendMessage(e.MethodName, e, SendMessageOptions.DontRequireReceiver);
                     CurrentEventIndex++;
