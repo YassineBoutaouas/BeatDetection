@@ -26,6 +26,7 @@ public class ConfigureRhythmWindow : EditorWindow
 
         wnd._waveFormContainer = new VisualElement { name = "wave-container" };
 
+        #region Waveform Container Cloning
         Texture2D waveFormTex = new Texture2D(4096, 1024);
         Graphics.CopyTexture(waveFormContainer.style.backgroundImage.value.texture, waveFormTex);
 
@@ -33,6 +34,8 @@ public class ConfigureRhythmWindow : EditorWindow
 
         Background bg = waveFormContainer.style.backgroundImage.value.texture;
         wnd._waveFormContainer.style.backgroundImage = bg;
+        wnd._waveFormContainer.pickingMode = PickingMode.Ignore;
+        #endregion
 
         wnd._wavesArray = waves;
         wnd._sampleArray = samples;
@@ -66,7 +69,9 @@ public class ConfigureRhythmWindow : EditorWindow
     private SoundElement _soundElement;
     private AudioSource _audioSource;
 
-    private float _currentTimeStamp;
+    private float _upperBound;
+    private float _lowerBound;
+
     private bool _isPlaying;
     #endregion
 
@@ -101,6 +106,16 @@ public class ConfigureRhythmWindow : EditorWindow
         _volumeSlider = rootVisualElement.Q<Slider>("volume-slider");
     }
 
+    public void Init()
+    {
+        InitFields();
+
+        _volumeSlider.RegisterCallback<ChangeEvent<float>>(ChangeVolume);
+        _playButton.clicked += OnPlaySoundFile;
+        _pauseButton.clicked += OnPauseSoundFile;
+        _stopButton.clicked += OnStopSoundFile;
+    }
+
     #region Audio methods
     private void ChangeVolume(ChangeEvent<float> volume)
     {
@@ -113,7 +128,7 @@ public class ConfigureRhythmWindow : EditorWindow
     {
         if (_audioSource == null) return;
 
-        _audioSource.time = _currentTimeStamp;
+        _audioSource.time = _lowerBound;
         _audioSource.Play();
 
         _isPlaying = true;
@@ -142,24 +157,14 @@ public class ConfigureRhythmWindow : EditorWindow
     }
     #endregion
 
-    public void Init()
-    {
-        InitFields();
-
-        #region Audio Buttons callbacks
-        _volumeSlider.RegisterCallback<ChangeEvent<float>>(ChangeVolume);
-        _playButton.clicked += OnPlaySoundFile;
-        _pauseButton.clicked += OnPauseSoundFile;
-        _stopButton.clicked += OnStopSoundFile;
-        #endregion
-    }
-
     private void OnDisable()
     {
         _volumeSlider.UnregisterCallback<ChangeEvent<float>>(ChangeVolume);
         _playButton.clicked -= OnPlaySoundFile;
         _pauseButton.clicked -= OnPauseSoundFile;
         _stopButton.clicked -= OnStopSoundFile;
+
+        OnStopSoundFile();
     }
 }
 #endif

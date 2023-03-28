@@ -6,8 +6,8 @@
         <ui:Slider label="Volume" value="1" high-value="1" name="volume-slider" focusable="false" style="margin-bottom: 10px; margin-top: 5px; width: 79%;" />
         <ui:VisualElement name="amplitude" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.3); align-self: center; align-items: center; max-width: 95%; max-height: 40%; min-width: 95%; min-height: 40%; justify-content: flex-end; flex-direction: column; height: 40%;">
             <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="amplitude-scroller" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="AlwaysVisible" style="background-color: rgba(43, 43, 43, 0); flex-grow: 1; flex-direction: row; max-height: 100%; min-height: 100%; height: 100%;">
-                <ui:VisualElement name="event-container" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-shrink: 1; flex-direction: row; width: 100%; max-width: 100%; min-width: 100%; height: 10%; max-height: 10%; min-height: 10%; position: absolute; transform-origin: left; overflow: hidden;" />
-                <ui:MinMaxSlider picking-mode="Ignore" min-value="0" max-value="1" low-limit="0" high-limit="1" focusable="false" name="sequence-slider" style="position: absolute; width: 100%; margin-left: 0; margin-right: 0; overflow: visible;" />
+                <Scrapper high-value="1" value="0" direction="Horizontal" style="width: 100%; top: 10%; position: absolute;" />
+                <ui:MinMaxSlider picking-mode="Ignore" min-value="0" max-value="1" low-limit="0" high-limit="1" focusable="false" name="sequence-slider" style="position: absolute; width: 100%; margin-left: 0; margin-right: 0; overflow: visible; top: 0;" />
             </ui:ScrollView>
         </ui:VisualElement>
         <ui:VisualElement name="audio-buttons" style="flex-shrink: 1; flex-direction: row; flex-grow: 0; height: 10%; justify-content: center; align-items: center; width: 50%; align-self: center;">
