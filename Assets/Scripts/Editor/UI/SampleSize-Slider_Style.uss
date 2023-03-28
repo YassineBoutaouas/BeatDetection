@@ -1,0 +1,42 @@
+.unity-min-max-slider__min-thumb {
+    height: 20px;
+    scale: 0.5 1;
+    background-color: rgb(255, 255, 255);
+    translate: -3px 0;
+    width: 5px;
+}
+
+.unity-min-max-slider__max-thumb {
+    height: 20px;
+    background-color: rgb(255, 255, 255);
+    width: 5px;
+    scale: 0.5 1;
+    translate: 3px 0;
+}
+
+.unity-min-max-slider__dragger {
+    background-image: none;
+    overflow: visible;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-left: 0;
+    margin-top: 4px;
+    margin-bottom: 0;
+    margin-right: 0;
+}
+
+.unity-min-max-slider__tracker {
+    overflow: visible;
+    visibility: hidden;
+}
+
+.unity-min-max-slider__max-thumb:hover {
+    height: 50px;
+}
+
+.unity-min-max-slider__min-thumb:hover {
+    height: 50px;
+    scale: 0.5 1;
+    background-color: rgb(255, 255, 255);
+    translate: -3px 0;
+    width: 5px;
+}

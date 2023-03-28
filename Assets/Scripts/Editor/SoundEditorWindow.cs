@@ -20,8 +20,7 @@ namespace SoundElements.Editor
         [MenuItem("Sound/SoundEditor")]
         public static void OpenWindow()
         {
-            SoundEditorWindow wnd = GetWindow<SoundEditorWindow>();
-            wnd.titleContent = new GUIContent("Sound Editor");
+            SoundEditorWindow wnd = GetWindow<SoundEditorWindow>("Sound Editor");
         }
 
         [OnOpenAsset]
@@ -39,7 +38,6 @@ namespace SoundElements.Editor
         #endregion
 
         #region Visual Elements
-        private VisualElement _mainWindow;
         private VisualElement _waveFormContainer;
 
         private VisualElement _eventContainer;
@@ -47,6 +45,8 @@ namespace SoundElements.Editor
         private Button _pauseButton;
         private Button _playButton;
         private Button _stopButton;
+
+        private Button _configureRhythm;
 
         private ToolbarButton _createButton;
         private ToolbarButton _selectButton;
@@ -143,7 +143,6 @@ namespace SoundElements.Editor
             StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(_configuratorStyle);
             rootVisualElement.styleSheets.Add(styleSheet);
 
-            _mainWindow = rootVisualElement.Q<VisualElement>("main-window");
             _waveFormContainer = rootVisualElement.Q<VisualElement>("wave-container");
             _eventContainer = rootVisualElement.Q<VisualElement>("event-container");
 
@@ -152,6 +151,8 @@ namespace SoundElements.Editor
             _pauseButton = rootVisualElement.Q<Button>("pause-button");
             _playButton = rootVisualElement.Q<Button>("play-button");
             _stopButton = rootVisualElement.Q<Button>("stop-button");
+
+            _configureRhythm = rootVisualElement.Q<Button>("configure-rhythm-button");
 
             _createButton = rootVisualElement.Q<ToolbarButton>("create-audio");
             _selectButton = rootVisualElement.Q<ToolbarButton>("audio-select");
@@ -196,6 +197,8 @@ namespace SoundElements.Editor
             _playButton.clicked += OnPlaySoundFile;
             _pauseButton.clicked += OnPauseSoundFile;
             _stopButton.clicked += OnStopSoundFile;
+
+            _configureRhythm.clicked += OnConfigureRhythm;
             #endregion
 
             _scrapper.valueChanged += OnUpdateCurrentTime;
@@ -215,6 +218,13 @@ namespace SoundElements.Editor
             if (!_isPlaying || _audioSource.clip == null) return;
 
             _scrapper.value = _audioSource.time / _soundElement.AudioClip.length;
+        }
+
+        private void OnConfigureRhythm()
+        {
+            if (_soundElement == null) return;
+
+            ConfigureRhythmWindow.OpenWindow(_serializedObject, _soundElement, _audioSource, _waveFormContainer, _wavesArray, _sampleArray, _sampleSize, position);
         }
 
         private void OnPlayModeChange(PlayModeStateChange playMode)

@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Scripts/Editor/UI/SampleSize-Slider_Style.uss?fileID=7433441132597879392&amp;guid=f2a06f0af1d716f4e87d997c963a3a90&amp;type=3#SampleSize-Slider_Style" />
+    <ui:MinMaxSlider picking-mode="Ignore" min-value="0" max-value="1" low-limit="0" high-limit="1" focusable="false" style="overflow: visible; -unity-background-image-tint-color: rgba(255, 255, 255, 0);" />
+</ui:UXML>
