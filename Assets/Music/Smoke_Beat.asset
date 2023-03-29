@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df05dc63a6e3b254496f912406b0297a, type: 3}
-  m_Name: Smoke-Beat
+  m_Name: Smoke_Beat
   m_EditorClassIdentifier: 
-  Name: Smoke-Beat
-  AudioClip: {fileID: 8300000, guid: 9de95b4116ae5d44b876012e7ce18853, type: 3}
+  Name: Smoke_Beat
+  AudioClip: {fileID: 8300000, guid: de9033d6410c3bb4aa7da6e4f0eed5c4, type: 3}
   SoundEvents:
   - MethodName: OnDrop
-    TimeStamp: 17.594723
+    TimeStamp: 18.39143
     FloatValue: 0
     IntValue: 0
     StringValue: 

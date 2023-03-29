@@ -72,7 +72,7 @@ public class ConfigureRhythmWindow : EditorWindow
     private float _upperBound;
     private float _lowerBound;
 
-    private bool _isPlaying;
+    //private bool _isPlaying;
     #endregion
 
     #region Wave form
@@ -131,7 +131,7 @@ public class ConfigureRhythmWindow : EditorWindow
         _audioSource.time = _lowerBound;
         _audioSource.Play();
 
-        _isPlaying = true;
+        //_isPlaying = true;
     }
 
     private void OnPauseSoundFile()
@@ -140,7 +140,7 @@ public class ConfigureRhythmWindow : EditorWindow
 
         _audioSource.Pause();
 
-        _isPlaying = false;
+        //_isPlaying = false;
     }
 
     private void OnStopSoundFile()
@@ -153,7 +153,7 @@ public class ConfigureRhythmWindow : EditorWindow
         //OnUpdateCurrentTime(0);
         _scrollView.horizontalScroller.value = 0;
 
-        _isPlaying = false;
+        //_isPlaying = false;
     }
     #endregion
 
