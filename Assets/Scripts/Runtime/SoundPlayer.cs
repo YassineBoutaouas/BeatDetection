@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
-using static Codice.CM.WorkspaceServer.DataStore.WkTree.WriteWorkspaceTree;
 
 namespace SoundElements
 {
@@ -15,7 +13,7 @@ namespace SoundElements
 
         public int BPM;
 
-        public BpmMatchData[] BPMMatches = new BpmMatchData[400 + 1];
+        public BpmMatchData[] BPMMatches = new BpmMatchData[800 + 1];
 
         public struct BpmMatchData
         {
@@ -25,20 +23,20 @@ namespace SoundElements
 
         public void CalculateBPM()
         {
-            ///Create waveform
-            int samplesSize = SoundElement.AudioClip.samples * SoundElement.AudioClip.channels;
-            float[] allSamples = new float[samplesSize];
+            ///Get samples
+            float[] allSamples = new float[SoundElement.AudioClip.samples * SoundElement.AudioClip.channels];
             SoundElement.AudioClip.GetData(allSamples, 0);
 
             ///divide into samples
             float sampleDuration = 0.1f;
 
-
             ///amount of samples in 0.1s
-            int segmentSampleAmount = Mathf.FloorToInt(SoundElement.AudioClip.frequency * sampleDuration / SoundElement.AudioClip.channels);
+            int segmentSampleAmount = Mathf.FloorToInt((SoundElement.AudioClip.frequency * sampleDuration) / SoundElement.AudioClip.channels);
 
+            int totalSegments = Mathf.CeilToInt((float)allSamples.Length / (float)segmentSampleAmount);
+            
             ///create peak array/ Volume array
-            float[] amplitudeArray = new float[Mathf.CeilToInt((float)allSamples.Length / (float)segmentSampleAmount)];
+            float[] similarityArray = new float[totalSegments];
             int powerIndex = 0;
 
             for (int segmentIndex = 0; segmentIndex < allSamples.Length; segmentIndex += segmentSampleAmount)
@@ -59,32 +57,31 @@ namespace SoundElements
                 }
 
                 // Set volume value
-                amplitudeArray[powerIndex] = Mathf.Sqrt(sum / segmentSampleAmount);
+                similarityArray[powerIndex] = Mathf.Sqrt(sum / segmentSampleAmount);
                 powerIndex++;
             }
 
             ///Average amplitudes
-            float maxAmplitude = amplitudeArray.Max();
-            for (int i = 0; i < amplitudeArray.Length; i++)
+            float maxAmplitude = similarityArray.Max();
+            for (int i = 0; i < similarityArray.Length; i++)
             {
-                amplitudeArray[i] = amplitudeArray[i] / maxAmplitude;
+                similarityArray[i] = similarityArray[i] / maxAmplitude;
                 //Debug.Log(amplitudeArray[i] / maxAmplitude);
             }
             ///-------------------------------------------------------------------------------------
 
             ///Search BPM for segments / Correlation list
             List<float> amplitudeDifferences = new List<float>();
-            for (int i = 1; i < amplitudeArray.Length; i++)
+            for (int i = 1; i < similarityArray.Length; i++)
             {
-                amplitudeDifferences.Add(Mathf.Max(amplitudeArray[i] - amplitudeArray[i - 1], 0f));
+                amplitudeDifferences.Add(Mathf.Max(similarityArray[i] - similarityArray[i - 1], 0f));
             }
 
             ///Calculate the correlation
             float splitFrequency = (float)SoundElement.AudioClip.frequency / (float)segmentSampleAmount;
-            Debug.Log(splitFrequency);
 
             int index = 0;
-            for (int bpm = 60; bpm <= 400; bpm++)
+            for (int bpm = 1; bpm <= 800; bpm++)
             {
                 float sinMatch = 0;
                 float cosMatch = 0;
@@ -113,6 +110,34 @@ namespace SoundElements
             /////---------------------------------------------------------------------------------------------------------
 
             BPM = 0;
+        }
+
+        protected float Mean(float[] floatValues)
+        {
+            float sum = 0;
+            for (int i = 0; i < floatValues.Length; i++)
+                sum += floatValues[i];
+
+            return sum / floatValues.Length;
+        }
+
+        public float[] Autocorrelation(float[] x)
+        {
+            float mean = Mean(x);
+            float[] autocorrelation = new float[x.Length / 2];
+            for (int t = 0; t < autocorrelation.Length; t++)
+            {
+                float n = 0; // Numerator
+                float d = 0; // Denominator
+                for (int i = 0; i < x.Length; i++)
+                {
+                    float xim = x[i] - mean;
+                    n += xim * (x[(i + t) % x.Length] - mean);
+                    d += xim * xim;
+                }
+                autocorrelation[t] = n / d;
+            }
+            return autocorrelation;
         }
 
         protected virtual void Start()
