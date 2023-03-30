@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Smoke_Beat
   m_EditorClassIdentifier: 
   Name: Smoke_Beat
-  AudioClip: {fileID: 8300000, guid: de9033d6410c3bb4aa7da6e4f0eed5c4, type: 3}
+  AudioClip: {fileID: 8300000, guid: 2c47ca79a81fedb4eadd38e56f4a0280, type: 3}
   SoundEvents:
   - MethodName: OnDrop
     TimeStamp: 18.39143

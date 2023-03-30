@@ -87,12 +87,9 @@ namespace SoundElements
                         sinMatch += (frequencyChanges[i] * Mathf.Cos(i * 2 * Mathf.PI * bps / splitFrequency));
                         cosMatch += (frequencyChanges[i] * Mathf.Sin(i * 2 * Mathf.PI * bps / splitFrequency));
                     }
-
-                    sinMatch *= (1 / (float)frequencyChanges.Count);
-                    cosMatch *= (1 / (float)frequencyChanges.Count);
                 }
 
-                float match = Mathf.Sqrt((sinMatch) + (cosMatch));
+                float match = (sinMatch) + (cosMatch);
                 BPMMatches[index].BPM = bpm;
                 BPMMatches[index].Match = match;
 
