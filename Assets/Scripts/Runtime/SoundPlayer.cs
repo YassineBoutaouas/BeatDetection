@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
+using static UnityEditor.ShaderData;
 
 namespace SoundElements
 {
@@ -27,87 +29,138 @@ namespace SoundElements
             float[] allSamples = new float[SoundElement.AudioClip.samples * SoundElement.AudioClip.channels];
             SoundElement.AudioClip.GetData(allSamples, 0);
 
-            ///divide into samples
+            ///Set a sample duration
             float sampleDuration = 0.1f;
 
             ///amount of samples in 0.1s
             int segmentSampleAmount = Mathf.FloorToInt((SoundElement.AudioClip.frequency * sampleDuration) / SoundElement.AudioClip.channels);
 
+            ///amount of total segments in the file
             int totalSegments = Mathf.CeilToInt((float)allSamples.Length / (float)segmentSampleAmount);
-            
-            ///create peak array/ Volume array
-            float[] similarityArray = new float[totalSegments];
-            int powerIndex = 0;
 
-            for (int segmentIndex = 0; segmentIndex < allSamples.Length; segmentIndex += segmentSampleAmount)
+            ///the average amplitude of the entire array
+            float averageAmplitude = Mean(allSamples);
+
+            ///Calculation of a similarity matrix by using autocorrelation
+            List<float[]> similarityMatrix = new List<float[]>();
+            for (int segmentIndex = 0; segmentIndex < totalSegments; segmentIndex++)
             {
-                float sum = 0f;
+                float[] similarity_row = new float[segmentSampleAmount];
 
-                //for(int s = 0; s < sampleLength; s++)
-                //sapmle = segmentIndex * segmentLength
-                for (int sample = segmentIndex; sample < segmentIndex + segmentSampleAmount; sample++)
+                float n = 0; // Numerator
+                float d = 0; // Denominator
+
+                for (int sample = 0; sample < segmentSampleAmount; sample++)
                 {
-                    if (allSamples.Length <= sample) break;
+                    float xim = allSamples[sample + segmentIndex] - averageAmplitude;
+                    n += xim * (allSamples[(sample + segmentIndex + segmentIndex) % allSamples.Length] - averageAmplitude);
+                    d += xim * xim;
 
-                    float absValue = Mathf.Abs(allSamples[sample]);
-
-                    if (absValue > 1) continue;
-
-                    sum += (absValue * absValue);
+                    float similarity = n / d;
+                    similarity_row[sample] = similarity;
                 }
-
-                // Set volume value
-                similarityArray[powerIndex] = Mathf.Sqrt(sum / segmentSampleAmount);
-                powerIndex++;
+                similarityMatrix.Add(similarity_row);
             }
+
+            ///Calulate average similarity for each segment
+            List<float> beatSpectrum = new List<float>();
+            for (int segmentIndex = 0; segmentIndex < totalSegments; segmentIndex++)
+            {
+                float averageSimilarity = Mean(similarityMatrix[segmentIndex]); //mean(similarity_matrix[i][i+t] for i in range(len(samples) - t))
+                beatSpectrum.Add(averageSimilarity);
+            }
+
+            ///Get all of the peaks - 
+            List<float> peaks = new List<float>();
+            for (int segmentIndex = 0; segmentIndex < totalSegments; segmentIndex++)
+            {
+                float max = similarityMatrix[segmentIndex].Max();
+                peaks.Add(max);
+                Debug.Log(max);
+            }
+
+            List<int> possibleBPMs = new List<int>();
+            for (int i = 0; i < peaks.Count; i++)
+            {
+                int bpm = Mathf.RoundToInt(60 / (segmentSampleAmount * peaks[i]));
+                possibleBPMs.Add(bpm);
+
+                Debug.Log(bpm);
+            }
+
+            ///create peak array/ Volume array
+            ///float[] similarityArray = new float[totalSegments];
+            ///int powerIndex = 0;
+            ///
+            ///for (int segmentIndex = 0; segmentIndex < allSamples.Length; segmentIndex += segmentSampleAmount)
+            ///{
+            ///    float sum = 0f;
+            ///    
+            ///    //for(int s = 0; s < sampleLength; s++)
+            ///    //sapmle = segmentIndex * segmentLength
+            ///    for (int sample = segmentIndex; sample < segmentIndex + segmentSampleAmount; sample++)
+            ///    {
+            ///        if (allSamples.Length <= sample) break;
+            ///        
+            ///        float absValue = Mathf.Abs(allSamples[sample]);
+            ///        
+            ///        if (absValue > 1) continue;
+            ///        
+            ///        sum += (absValue * absValue);
+            ///    }
+            ///    
+            ///    // Set volume value
+            ///    similarityArray[powerIndex] = Mathf.Sqrt(sum / segmentSampleAmount);
+            ///    powerIndex++;
+            ///}
 
             ///Average amplitudes
-            float maxAmplitude = similarityArray.Max();
-            for (int i = 0; i < similarityArray.Length; i++)
-            {
-                similarityArray[i] = similarityArray[i] / maxAmplitude;
-                //Debug.Log(amplitudeArray[i] / maxAmplitude);
-            }
+            ///float maxAmplitude = similarityArray.Max();
+            ///for (int i = 0; i < similarityArray.Length; i++)
+            ///{
+            ///    similarityArray[i] = similarityArray[i] / maxAmplitude;
+            ///    //Debug.Log(amplitudeArray[i] / maxAmplitude);
+            ///}
             ///-------------------------------------------------------------------------------------
 
             ///Search BPM for segments / Correlation list
-            List<float> amplitudeDifferences = new List<float>();
-            for (int i = 1; i < similarityArray.Length; i++)
-            {
-                amplitudeDifferences.Add(Mathf.Max(similarityArray[i] - similarityArray[i - 1], 0f));
-            }
-
+            ///List<float> amplitudeDifferences = new List<float>();
+            ///for (int i = 1; i < similarityArray.Length; i++)
+            ///{
+            ///    amplitudeDifferences.Add(Mathf.Max(similarityArray[i] - similarityArray[i - 1], 0f));
+            ///}
+            ///
             ///Calculate the correlation
-            float splitFrequency = (float)SoundElement.AudioClip.frequency / (float)segmentSampleAmount;
-
-            int index = 0;
-            for (int bpm = 1; bpm <= 800; bpm++)
-            {
-                float sinMatch = 0;
-                float cosMatch = 0;
-                float bps = (float)bpm / 60f;
-
-                if (amplitudeDifferences.Count > 0)
-                {
-                    for (int i = 0; i < amplitudeDifferences.Count; i++)
-                    {
-                        sinMatch += (amplitudeDifferences[i] * Mathf.Cos(i * 2 * Mathf.PI * bps / splitFrequency));
-                        cosMatch += (amplitudeDifferences[i] * Mathf.Sin(i * 2 * Mathf.PI * bps / splitFrequency));
-                    }
-
-                    sinMatch *= (1 / (float)amplitudeDifferences.Count); //average
-                    cosMatch *= (1 / (float)amplitudeDifferences.Count); //average
-                }
-
-                float match = Mathf.Sqrt((sinMatch * sinMatch) + (cosMatch * cosMatch));
-                BPMMatches[index].BPM = bpm;
-                BPMMatches[index].Match = match;
-                index++;
-            }
-
-            int assumedBPMIndex = Array.FindIndex(BPMMatches, x => x.Match == BPMMatches.Max(y => y.Match));
-            Debug.Log($"BPM: {BPMMatches[assumedBPMIndex].BPM}");
-            /////---------------------------------------------------------------------------------------------------------
+            ///float splitFrequency = (float)SoundElement.AudioClip.frequency / (float)segmentSampleAmount;
+            ///
+            ///int index = 0;
+            ///for (int bpm = 1; bpm <= 800; bpm++)
+            ///{
+            ///    float sinMatch = 0;
+            ///    float cosMatch = 0;
+            ///    float bps = (float)bpm / 60f;
+            ///    
+            ///    if (amplitudeDifferences.Count > 0)
+            ///    {
+            ///        for (int i = 0; i < amplitudeDifferences.Count; i++)
+            ///        {
+            ///            sinMatch += (amplitudeDifferences[i] * Mathf.Cos(i * 2 * Mathf.PI * bps / splitFrequency));
+            ///            cosMatch += (amplitudeDifferences[i] * Mathf.Sin(i * 2 * Mathf.PI * bps / splitFrequency));
+            ///        }
+            ///        
+            ///        sinMatch *= (1 / (float)amplitudeDifferences.Count); //average
+            ///        cosMatch *= (1 / (float)amplitudeDifferences.Count); //average
+            ///    }
+            ///    
+            ///    float match = Mathf.Sqrt((sinMatch * sinMatch) + (cosMatch * cosMatch));
+            ///    BPMMatches[index].BPM = bpm;
+            ///    BPMMatches[index].Match = match;
+            ///    index++;
+            ///}
+            ///
+            ///int assumedBPMIndex = Array.FindIndex(BPMMatches, x => x.Match == BPMMatches.Max(y => y.Match));
+            ///Debug.Log($"BPM: {BPMMatches[assumedBPMIndex].BPM}");
+            ///---------------------------------------------------------------------------------------------------------
 
             BPM = 0;
         }
@@ -116,7 +169,9 @@ namespace SoundElements
         {
             float sum = 0;
             for (int i = 0; i < floatValues.Length; i++)
-                sum += floatValues[i];
+            {
+                sum += Mathf.Abs(floatValues[i]);
+            }
 
             return sum / floatValues.Length;
         }
