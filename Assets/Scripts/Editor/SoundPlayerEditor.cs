@@ -19,7 +19,7 @@ namespace SoundElements.Editor
             base.OnInspectorGUI();
 
             if(GUILayout.Button("Calculate BPM"))
-                _soundPlayer.CalculateBPM();
+                Debug.Log(RhythmReader.CalculateBPM(_soundPlayer.SoundElement));
         }
     }
 }
