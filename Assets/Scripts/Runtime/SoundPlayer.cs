@@ -59,12 +59,12 @@ namespace SoundElements
                 float sum = 0f;
                 for (int j = 0; j < segments[i].Length; j++)
                 {
-                    float abs = Mathf.Abs(segments[i][j]); //^2?
+                    float abs = Mathf.Abs(segments[i][j]);
 
                     sum += abs * abs;
                 }
 
-                averages[i] = Mathf.Sqrt(sum / segmentSampleAmount);
+                averages[i] = sum / segmentSampleAmount;
             }
 
             List<float> frequencyChanges = new List<float>();
