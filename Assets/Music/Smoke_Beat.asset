@@ -16,7 +16,7 @@ MonoBehaviour:
   AudioClip: {fileID: 8300000, guid: 8d140728798782d4d8102834eb7f8617, type: 3}
   SoundEvents:
   - MethodName: OnDrop
-    TimeStamp: 12.167607
+    TimeStamp: 9.489025
     FloatValue: 0
     IntValue: 0
     StringValue: 

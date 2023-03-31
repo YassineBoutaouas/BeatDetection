@@ -11,12 +11,9 @@ using UnityEngine.UIElements;
 
 namespace SoundElements.Editor
 {
-    public class SoundEditorWindow : EditorWindow
+    public class SoundEditorWindow : SoundEditor
     {
         #region Static members
-        private const string _configuratorPath = "Assets/Scripts/Editor/UI/SoundEditor.uxml";
-        private const string _configuratorStyle = "Assets/Scripts/Editor/UI/SoundEditor_Style.uss";
-
         [MenuItem("Sound/SoundEditor")]
         public static void OpenWindow()
         {
@@ -38,25 +35,11 @@ namespace SoundElements.Editor
         #endregion
 
         #region Visual Elements
-        private VisualElement _waveFormContainer;
-
         private VisualElement _eventContainer;
-
-        private Button _pauseButton;
-        private Button _playButton;
-        private Button _stopButton;
-
         private Button _configureRhythm;
 
         private ToolbarButton _createButton;
         private ToolbarButton _selectButton;
-
-        private Scrapper _scrapper;
-        private ScrollView _scrollView;
-        private Slider _volumeSlider;
-
-        private TextField _audioField;
-
 
         private InspectorView _inspectorView;
         private EventProperties _eventProperties;
@@ -106,9 +89,7 @@ namespace SoundElements.Editor
         #endregion
 
         #region Wave form
-        private int[] _waveFormResolution = new int[] { 4096, 1024 };
         private Color _waveBackDrop = new Color(0, 0, 0, 0);
-        private Color _waveColor = new Color(0.78f, 0.65f, 0.34f, 1);
 
         private Texture2D _waveFormTexture;
 
@@ -118,134 +99,72 @@ namespace SoundElements.Editor
         private int _sampleSize;
         #endregion
 
-        #region Sound element references
-        private SoundElement _soundElement;
-        private AudioSource _audioSource;
-        private GameObject _audioObject;
-
-        private float _currentTimeStamp;
-        private bool _isPlaying;
-        #endregion
-
         #region Subeditors and manipulators
         private SoundFileSearchProvider _soundFileSearchProvider;
         private ContextualMenuManipulator _contextManipulator;
         private Clickable _clickable;
         #endregion
 
-        private SerializedObject _serializedObject;
-
-        private void InitFields()
+        protected override void InitFields()
         {
-            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(_configuratorPath);
-            visualTree.CloneTree(rootVisualElement);
+            SetPaths("Assets/Scripts/Editor/UI/SoundEditor.uxml", "Assets/Scripts/Editor/UI/SoundEditor_Style.uss");
 
-            StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(_configuratorStyle);
-            rootVisualElement.styleSheets.Add(styleSheet);
+            base.InitFields();
 
-            _waveFormContainer = rootVisualElement.Q<VisualElement>("wave-container");
             _eventContainer = rootVisualElement.Q<VisualElement>("event-container");
-
-            _scrollView = rootVisualElement.Q<ScrollView>();
-
-            _pauseButton = rootVisualElement.Q<Button>("pause-button");
-            _playButton = rootVisualElement.Q<Button>("play-button");
-            _stopButton = rootVisualElement.Q<Button>("stop-button");
 
             _configureRhythm = rootVisualElement.Q<Button>("configure-rhythm-button");
 
             _createButton = rootVisualElement.Q<ToolbarButton>("create-audio");
             _selectButton = rootVisualElement.Q<ToolbarButton>("audio-select");
 
-            _audioField = rootVisualElement.Q<TextField>();
-            _audioField.focusable = false;
-
-            _volumeSlider = rootVisualElement.Q<Slider>();
-            _scrapper = rootVisualElement.Q<Scrapper>();
-
             _inspectorView = rootVisualElement.Q<InspectorView>();
             _eventProperties = new EventProperties(_inspectorView);
 
             _soundFileSearchProvider = ScriptableObject.CreateInstance<SoundFileSearchProvider>();
 
-            _eventContainer.RegisterCallback<KeyDownEvent>(RemoveEvent);
-            _eventContainer.RegisterCallback<KeyDownEvent>(JumpTo);
+            CreateSoundObject();
         }
 
-        public void CreateGUI()
+        protected override void CreateGUI()
         {
             InitFields();
 
             _soundFileSearchProvider.Initialize(OnSelectSoundFile);
 
             #region Audio Waves
-            _waveFormTexture = new Texture2D(_waveFormResolution[0], _waveFormResolution[1], TextureFormat.RGBA32, true);
-            _wavesArray = new float[_waveFormResolution[0]];
-
-            _audioObject = new GameObject("Temp_AudioObject");
-            _audioSource = _audioObject.AddComponent<AudioSource>();
-            _audioSource.loop = false;
+            _waveFormTexture = new Texture2D(_waveFormResolution.x, _waveFormResolution.y, TextureFormat.RGBA32, true);
+            _wavesArray = new float[_waveFormResolution.x];
             #endregion
-
-            #region SounElement Buttons Callbacks
-            _createButton.clicked += CreateSoundElement;
-            _selectButton.clicked += OnOpenSearchTree;
-            #endregion
-
-            #region Audio Buttons callbacks
-            _volumeSlider.RegisterCallback<ChangeEvent<float>>(ChangeVolume);
-            _playButton.clicked += OnPlaySoundFile;
-            _pauseButton.clicked += OnPauseSoundFile;
-            _stopButton.clicked += OnStopSoundFile;
-
-            _configureRhythm.clicked += OnConfigureRhythm;
-            #endregion
-
-            _scrapper.valueChanged += OnUpdateCurrentTime;
 
             _contextManipulator = new ContextualMenuManipulator(CreateEventContext);
             _eventContainer.AddManipulator(_contextManipulator);
             _clickable = new Clickable(SelectEvent, 0, 0);
             _eventContainer.AddManipulator(_clickable);
 
-            EditorApplication.playModeStateChanged += OnPlayModeChange;
+            SetEvents();
         }
 
-        public void OnGUI() { _scrapper.DraggerBody.transform.scale = new Vector3(_scrapper.DraggerBody.transform.scale.x, _waveFormContainer.resolvedStyle.height); }
-
-        public void Update()
+        protected override void SetEvents()
         {
-            if (!_isPlaying || _audioSource.clip == null) return;
+            base.SetEvents();
 
-            _scrapper.value = _audioSource.time / _soundElement.AudioClip.length;
+            _eventContainer.RegisterCallback<KeyDownEvent>(RemoveEvent);
+            _eventContainer.RegisterCallback<KeyDownEvent>(JumpTo);
+
+            _createButton.clicked += CreateSoundElement;
+            _selectButton.clicked += OnOpenSearchTree;
+
+            _configureRhythm.clicked += OnConfigureRhythm;
+
+            EditorApplication.playModeStateChanged += OnPlayModeChange;
         }
 
         private void OnConfigureRhythm()
         {
             if (_soundElement == null) return;
 
-            ConfigureRhythmWindow.OpenWindow(_serializedObject, _soundElement, _audioSource, _waveFormContainer, _wavesArray, _sampleArray, _sampleSize, position);
-        }
-
-        private void OnPlayModeChange(PlayModeStateChange playMode)
-        {
-            switch (playMode)
-            {
-                case PlayModeStateChange.EnteredEditMode:
-                    break;
-                case PlayModeStateChange.ExitingEditMode:
-                    if (_audioObject != null) DestroyImmediate(_audioObject);
-                    Close();
-                    break;
-                case PlayModeStateChange.EnteredPlayMode:
-                    if(_audioObject != null) DestroyImmediate(_audioObject);
-                    Close();
-                    break;
-                case PlayModeStateChange.ExitingPlayMode:
-                    break;
-                default:
-                    break;
-            }
+            ConfigureRhythmWindow.OpenWindow(_serializedObject, _soundElement, _waveFormContainer, _wavesArray, _sampleArray, _sampleSize, position);
         }
 
         #region Event methods
@@ -357,21 +276,7 @@ namespace SoundElements.Editor
         }
         #endregion
 
-        private void OnUpdateCurrentTime(float time)
-        {
-            if (_soundElement == null) return;
-
-            _currentTimeStamp = _soundElement.AudioClip.length * time;
-
-            _scrollView.ScrollTo(_scrapper.Dragger);
-        }
-
         #region Select methods
-        private float CalculateRelativePositionInWindow(float t)
-        {
-            return _waveFormContainer.style.width.value.value * (t / _soundElement.AudioClip.length);
-        }
-
         private void OnOpenSearchTree() { SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Mouse.current.position.ReadValue())), _soundFileSearchProvider); }
 
         private void CreateSoundElement() { CreateSoundElementWindow.OpenWindow(OnSelectSoundFile); }
@@ -390,11 +295,7 @@ namespace SoundElements.Editor
 
             DrawWaveForm();
 
-            _scrapper.value = 0;
-
-            OnUpdateCurrentTime(0);
-
-            _scrollView.horizontalScroller.value = 0;
+            ResetView();
 
             _serializedObject = new SerializedObject(_soundElement);
             _eventProperties.BindObject(_serializedObject);
@@ -411,12 +312,12 @@ namespace SoundElements.Editor
 
             _soundElement.AudioClip.GetData(_sampleArray, 0);
 
-            int compressedSize = _sampleSize / _waveFormResolution[0];
+            int compressedSize = _sampleSize / _waveFormResolution.x;
 
-            for (int x = 0; x < _waveFormResolution[0]; x++)
+            for (int x = 0; x < _waveFormResolution.x; x++)
             {
                 _wavesArray[x] = Mathf.Abs(_sampleArray[x * compressedSize]);
-                for (int y = 0; y < _waveFormResolution[1]; y++)
+                for (int y = 0; y < _waveFormResolution.y; y++)
                 {
                     _waveFormTexture.SetPixel(x, y, _waveBackDrop);
                 }
@@ -425,10 +326,10 @@ namespace SoundElements.Editor
             IStyle rect = _waveFormContainer.style;
             rect.width = compressedSize;
 
-            int height = (int)(_waveFormResolution[1] / 2);
-            for (int x = 0; x < _waveFormResolution[0]; x++)
+            int height = (_waveFormResolution.y / 2);
+            for (int x = 0; x < _waveFormResolution.x; x++)
             {
-                for (int y = 0; y < _wavesArray[x] * _waveFormResolution[1]; y++)
+                for (int y = 0; y < _wavesArray[x] * _waveFormResolution.y; y++)
                 {
                     _waveFormTexture.SetPixel(x, height + y, _waveColor);
                     _waveFormTexture.SetPixel(x, height - y, _waveColor);
@@ -439,67 +340,15 @@ namespace SoundElements.Editor
 
             _waveFormContainer.style.backgroundImage = _waveFormTexture;
 
-            Debug.Log(Time.realtimeSinceStartup - t);
+            Debug.Log($"Duration of Texture generation: {Time.realtimeSinceStartup - t}s");
         }
         #endregion
 
-        #region Audio methods
-        private void ChangeVolume(ChangeEvent<float> volume)
+        protected override void ReleaseEvents()
         {
-            if (_audioSource == null) return;
-
-            _audioSource.volume = volume.newValue;
-        }
-
-        private void OnPlaySoundFile()
-        {
-            if (_audioSource == null) return;
-
-            _audioSource.time = _currentTimeStamp;
-            _audioSource.Play();
-
-            _isPlaying = true;
-        }
-
-        private void OnPauseSoundFile()
-        {
-            if (_audioSource == null) return;
-
-            _audioSource.Pause();
-
-            _isPlaying = false;
-        }
-
-        private void OnStopSoundFile()
-        {
-            if (_audioSource == null) return;
-
-            _audioSource.Stop();
-
-            _scrapper.value = 0;
-            OnUpdateCurrentTime(0);
-            _scrollView.horizontalScroller.value = 0;
-
-            _isPlaying = false;
-        }
-        #endregion
-
-        private void OnDisable()
-        {
-            _volumeSlider.UnregisterCallback<ChangeEvent<float>>(ChangeVolume);
-
-            _selectButton.clicked -= OnOpenSearchTree;
-            _playButton.clicked -= OnPlaySoundFile;
-            _pauseButton.clicked -= OnPauseSoundFile;
-            _stopButton.clicked -= OnStopSoundFile;
-
+            base.ReleaseEvents();
             _soundFileSearchProvider.OnRelease();
-
             _eventContainer.UnregisterCallback<KeyDownEvent>(RemoveEvent);
-
-            EditorApplication.playModeStateChanged -= OnPlayModeChange;
-
-            GameObject.DestroyImmediate(_audioObject);
         }
     }
 
