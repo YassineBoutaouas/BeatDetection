@@ -238,8 +238,6 @@ namespace SoundElements
         {
             _audioSource = gameObject.AddComponent<AudioSource>();
             _audioSource.clip = SoundElement.AudioClip;
-
-            UniBpmAnalyzer.AnalyzeBpm(SoundElement.AudioClip);
         }
 
         public void Play()
