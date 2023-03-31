@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Scripts/Editor/UI/ConfigureRhythm_Style.uss?fileID=7433441132597879392&amp;guid=16392e98c220c794395a0b26a9d60065&amp;type=3#ConfigureRhythm_Style" />
     <ui:Label tabindex="-1" text="Configure Rhythm" display-tooltip-when-elided="true" style="width: 100%; height: 5%; font-size: 14px; -unity-text-align: lower-center; align-self: auto;" />
-    <ui:VisualElement name="soundwindow" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); align-self: center; justify-content: center;">
+    <ui:VisualElement name="soundwindow" picking-mode="Ignore" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); align-self: center; justify-content: center;">
         <ui:TextField picking-mode="Ignore" label="Sound File" value="None" name="audio-field" readonly="true" focusable="false" style="margin-right: 23px;" />
         <ui:Slider label="Volume" value="1" high-value="1" name="volume-slider" focusable="false" style="margin-bottom: 10px; margin-top: 5px; width: 79%;" />
         <ui:VisualElement name="amplitude" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.3); align-self: center; align-items: center; max-width: 95%; max-height: 40%; min-width: 95%; min-height: 40%; justify-content: flex-end; flex-direction: column; height: 40%;">
@@ -16,21 +16,18 @@
             <ui:Button display-tooltip-when-elided="true" name="play-button" focusable="false" style="background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/Icons/play-icon.png?fileID=2800000&amp;guid=b067d3bf70e9c8a45932f9b5fc3cc26c&amp;type=3#play-icon&apos;); -unity-background-scale-mode: scale-to-fit;" />
             <ui:Button display-tooltip-when-elided="true" name="pause-button" focusable="false" style="-unity-background-scale-mode: scale-to-fit; background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/Icons/pause-icon.png?fileID=2800000&amp;guid=0b79e3944b75c744bacbc54b7e37869e&amp;type=3#pause-icon&apos;);" />
         </ui:VisualElement>
-        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 20%; margin-top: 10px;">
-            <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; margin-bottom: 15px; align-self: center;">
+        <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 20%; margin-top: 10px; align-self: center;">
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; margin-bottom: 15px; align-self: center;">
                 <ui:FloatField label="Sample Length" value="42,2" name="sample-length" readonly="true" focusable="false" />
-                <ui:FloatField label="Start-End" value="0" name="start-sample" readonly="false" focusable="false" />
-                <ui:FloatField value="0" name="end-sample" readonly="false" focusable="false" />
+                <ui:IntegerField label="Start-End" value="0" name="start-sample" style="width: 50%;" />
+                <ui:IntegerField value="0" name="end-sample" style="width: 15%;" />
             </ui:VisualElement>
-            <ui:IntegerField label="BPM" value="0" name="bpm-field" focusable="false" style="justify-content: center; align-self: center; width: 50%;" />
-            <ui:VisualElement name="method-buttons" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 30%; align-self: auto; justify-content: center; margin-top: 10px;">
-                <ui:Button text="Dynamic" display-tooltip-when-elided="true" name="dynamic-recognition" focusable="false" style="margin-right: 0; margin-left: 0; height: 100%;" />
-                <ui:Button text="Input" display-tooltip-when-elided="true" name="manual-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 100%;" />
-                <ui:Button text="Automatic" display-tooltip-when-elided="true" name="automatic-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 100%;" />
+            <ui:IntegerField label="BPM" value="0" name="bpm-field" focusable="true" style="justify-content: center; align-self: auto; width: 50%;" />
+            <ui:VisualElement name="method-buttons" picking-mode="Ignore" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 30%; align-self: auto; justify-content: center; margin-top: 10px;">
+                <ui:Button text="Record" display-tooltip-when-elided="true" name="manual-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 100%; width: 40%;" />
+                <ui:Button text="Automatic" display-tooltip-when-elided="true" name="automatic-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 100%; width: 40%;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="confirmation-buttons" style="flex-direction: row; justify-content: center;">
-        <ui:Button text="Ok" display-tooltip-when-elided="true" focusable="false" name="configure-bpm-button" style="width: 20%; height: 25px; align-self: center; margin-top: 10px;" />
-    </ui:VisualElement>
+    <ui:Button text="Ok" display-tooltip-when-elided="true" focusable="false" name="ok-button" style="width: 20%; height: 25px; align-self: center; margin-top: 10px;" />
 </ui:UXML>
