@@ -10,18 +10,17 @@ namespace SoundElements.Editor
         #region Static members
         public static void OpenWindow(SerializedObject obj, SoundElement soundElement, VisualElement waveFormContainer, float[] waves, float[] samples, int sampleSize, Rect pos)
         {
-            ConfigureRhythmWindow wnd = CreateWindow<ConfigureRhythmWindow>("Rhythm Editor");
-
+            ConfigureRhythmWindow wnd = CreateInstance<ConfigureRhythmWindow>();
+            wnd.titleContent = new GUIContent("Rhythm Editor");
 
             wnd.CreateSoundObject();
             wnd._soundElement = soundElement;
             wnd._audioSource.clip = soundElement.AudioClip;
 
-            wnd.SetPaths("Assets/Scripts/Editor/UI/ConfigureRhythmEditor.uxml", "Assets/Scripts/Editor/UI/ConfigureRhythm_Style.uss");
-
-            wnd.position = pos;
             wnd._serializedObject = obj;
-            wnd.Focus();
+
+            wnd.SetPaths("Assets/Scripts/Editor/UI/ConfigureRhythmEditor.uxml", "Assets/Scripts/Editor/UI/ConfigureRhythm_Style.uss");
+            wnd.position = pos;
 
             wnd.InitFields();
 
@@ -35,6 +34,9 @@ namespace SoundElements.Editor
             wnd._waveFormContainer.style.backgroundImage = bg;
             wnd._waveFormContainer.pickingMode = PickingMode.Ignore;
             #endregion
+
+            wnd.Show();
+            wnd.Focus();
         }
         #endregion
 

@@ -17,15 +17,13 @@
             <ui:Button display-tooltip-when-elided="true" name="pause-button" focusable="false" style="-unity-background-scale-mode: scale-to-fit; background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/Icons/pause-icon.png?fileID=2800000&amp;guid=0b79e3944b75c744bacbc54b7e37869e&amp;type=3#pause-icon&apos;);" />
         </ui:VisualElement>
         <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 20%; margin-top: 10px;">
-            <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; margin-bottom: 15px;">
-                <ui:FloatField label="Sample Length" value="42,2" name="sample-length" readonly="true" style="width: 39%;" />
-                <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
-                    <ui:FloatField label="Start-End" value="0" name="start-sample" readonly="true" />
-                    <ui:FloatField value="0" name="end-sample" readonly="true" />
-                </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; margin-bottom: 15px; align-self: center;">
+                <ui:FloatField label="Sample Length" value="42,2" name="sample-length" readonly="true" focusable="false" />
+                <ui:FloatField label="Start-End" value="0" name="start-sample" readonly="false" focusable="false" />
+                <ui:FloatField value="0" name="end-sample" readonly="false" focusable="false" />
             </ui:VisualElement>
-            <ui:TextField picking-mode="Ignore" label="BPM" value="(Not set)" name="bpm-field" focusable="false" style="width: 75%; align-self: center;" />
-            <ui:VisualElement name="method-buttons" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 30%; align-self: auto; justify-content: center; margin-top: 5px;">
+            <ui:IntegerField label="BPM" value="0" name="bpm-field" focusable="false" style="justify-content: center; align-self: center; width: 50%;" />
+            <ui:VisualElement name="method-buttons" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 30%; align-self: auto; justify-content: center; margin-top: 10px;">
                 <ui:Button text="Dynamic" display-tooltip-when-elided="true" name="dynamic-recognition" focusable="false" style="margin-right: 0; margin-left: 0; height: 100%;" />
                 <ui:Button text="Input" display-tooltip-when-elided="true" name="manual-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 100%;" />
                 <ui:Button text="Automatic" display-tooltip-when-elided="true" name="automatic-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 100%;" />

@@ -370,7 +370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2145e5a9d773aad4fa3ac16886f2f431, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SoundElement: {fileID: 11400000, guid: 23b21a8958d33884db4b7a621bb819a3, type: 2}
+  SoundElement: {fileID: 11400000, guid: 25ade12e03f202b49b14b0840b00ae01, type: 2}
   BPM: 0
   Standard: {r: 0, g: 3.6381867, b: 3.6573353, a: 0}
   Drop: {r: 7.018868, g: 0, b: 0.46328533, a: 0}

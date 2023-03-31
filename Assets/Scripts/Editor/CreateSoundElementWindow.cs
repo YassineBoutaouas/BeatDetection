@@ -35,6 +35,7 @@ namespace SoundElements.Editor
 
             wnd.Init();
             wnd.ShowModalUtility();
+            wnd.Focus();
         }
 
         public void Init()
@@ -100,9 +101,9 @@ namespace SoundElements.Editor
 
         private void OnDisable()
         {
-            _changePath.clicked -= SelectPath;
-            _saveAsset.clicked -= SaveNewSoundElement;
-            _cancel.clicked -= Close;
+            if (_changePath != null) _changePath.clicked -= SelectPath;
+            if (_saveAsset != null) _saveAsset.clicked -= SaveNewSoundElement;
+            if (_cancel != null) _cancel.clicked -= Close;
 
             OnSoundElementSaved = null;
         }

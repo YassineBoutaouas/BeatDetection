@@ -47,6 +47,7 @@
 
 .unity-min-max-slider__min-thumb {
     background-color: rgb(255, 255, 255);
+    height: 30%;
 }
 
 .unity-min-max-slider__max-thumb {
