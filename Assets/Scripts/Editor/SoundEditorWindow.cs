@@ -279,7 +279,10 @@ namespace SoundElements.Editor
         #region Select methods
         private void OnOpenSearchTree() { SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Mouse.current.position.ReadValue())), _soundFileSearchProvider); }
 
-        private void CreateSoundElement() { CreateSoundElementWindow.OpenWindow(OnSelectSoundFile); }
+        private void CreateSoundElement()
+        {
+            CreateSoundElementWindow.OpenWindow(OnSelectSoundFile);
+        }
 
         private void OnSelectSoundFile(SoundElement soundElement)
         {

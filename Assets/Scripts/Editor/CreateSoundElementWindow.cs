@@ -26,16 +26,18 @@ namespace SoundElements.Editor
 
         public static void OpenWindow(System.Action<SoundElement> onSoundElementSaved)
         {
-            CreateSoundElementWindow wnd = GetWindow<CreateSoundElementWindow>();
+            CreateSoundElementWindow wnd = CreateInstance<CreateSoundElementWindow>();
+
             wnd.titleContent = new GUIContent("Create new configurator");
+            wnd.OnSoundElementSaved = onSoundElementSaved;
 
             wnd.position = new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 4, Screen.height / 4);
-            wnd.ShowPopup();
 
-            wnd.OnSoundElementSaved = onSoundElementSaved;
+            wnd.Init();
+            wnd.ShowModalUtility();
         }
 
-        public void CreateGUI()
+        public void Init()
         {
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(_createSoundElementPath);
             visualTree.CloneTree(rootVisualElement);
@@ -51,6 +53,11 @@ namespace SoundElements.Editor
 
             _audioField = rootVisualElement.Q<ObjectField>("audio-object");
 
+            SubscribeEvents();
+        }
+
+        protected void SubscribeEvents()
+        {
             _changePath.clicked += SelectPath;
             _saveAsset.clicked += SaveNewSoundElement;
             _cancel.clicked += Close;
@@ -86,7 +93,7 @@ namespace SoundElements.Editor
             AssetDatabase.CreateAsset(obj, _selectedPath + $"/{_objectName.text}.asset");
             AssetDatabase.SaveAssets();
 
-            OnSoundElementSaved(obj);
+            OnSoundElementSaved?.Invoke(obj);
 
             Close();
         }
@@ -96,6 +103,8 @@ namespace SoundElements.Editor
             _changePath.clicked -= SelectPath;
             _saveAsset.clicked -= SaveNewSoundElement;
             _cancel.clicked -= Close;
+
+            OnSoundElementSaved = null;
         }
     }
 }
