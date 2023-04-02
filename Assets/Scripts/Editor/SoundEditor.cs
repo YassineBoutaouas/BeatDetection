@@ -126,6 +126,19 @@ public class SoundEditor : EditorWindow
         _audioSource.volume = volume.newValue;
     }
 
+    protected void OnPlayStateChange(KeyDownEvent keyEvent)
+    {
+        if (keyEvent.keyCode != KeyCode.Space) return;
+
+        if (_isPlaying)
+        {
+            OnPauseSoundFile();
+            return;
+        }
+
+        OnPlaySoundFile();
+    }
+
     protected void OnPlaySoundFile()
     {
         if (_audioSource == null) return;

@@ -11,19 +11,6 @@ namespace SoundElements
         protected AudioSource _audioSource;
         public float CurrentEventIndex { get; private set; }
 
-        public int BPM;
-
-        //protected float Mean(float[] floatValues)
-        //{
-        //    float sum = 0;
-        //    for (int i = 0; i < floatValues.Length; i++)
-        //    {
-        //        sum += Mathf.Abs(floatValues[i]);
-        //    }
-
-        //    return sum / floatValues.Length;
-        //}
-
         protected virtual void Start()
         {
             _audioSource = gameObject.AddComponent<AudioSource>();

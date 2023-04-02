@@ -8,6 +8,7 @@ namespace SoundElements
     {
         public string Name;
         public AudioClip AudioClip;
+        public int BPM;
 
         [NonReorderable] public List<SoundEvent> SoundEvents = new List<SoundEvent>();
     }

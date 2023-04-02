@@ -1,13 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Scripts/Editor/UI/ConfigureRhythm_Style.uss?fileID=7433441132597879392&amp;guid=16392e98c220c794395a0b26a9d60065&amp;type=3#ConfigureRhythm_Style" />
     <ui:Label tabindex="-1" text="Configure Rhythm" display-tooltip-when-elided="true" style="width: 100%; height: 5%; font-size: 14px; -unity-text-align: lower-center; align-self: auto;" />
-    <ui:VisualElement name="soundwindow" picking-mode="Ignore" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); align-self: center; justify-content: center;">
+    <ui:VisualElement name="soundwindow" picking-mode="Ignore" focusable="true" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); align-self: center; justify-content: center;">
         <ui:TextField picking-mode="Ignore" label="Sound File" value="None" name="audio-field" readonly="true" focusable="false" style="margin-right: 23px;" />
         <ui:Slider label="Volume" value="1" high-value="1" name="volume-slider" focusable="false" style="margin-bottom: 10px; margin-top: 5px; width: 79%;" />
         <ui:VisualElement name="amplitude" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.3); align-self: center; align-items: center; max-width: 95%; max-height: 40%; min-width: 95%; min-height: 40%; justify-content: flex-end; flex-direction: column; height: 40%;">
             <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="amplitude-scroller" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="AlwaysVisible" style="background-color: rgba(43, 43, 43, 0); flex-grow: 1; flex-direction: row; max-height: 100%; min-height: 100%; height: 100%;">
                 <ui:VisualElement name="wave-container" style="height: 85%; transform-origin: left; max-height: 85%; min-height: 85%; align-self: flex-start; top: 10%; overflow: hidden; width: 0;" />
-                <Scrapper high-value="1" value="0" direction="Horizontal" style="width: 100%; top: 10%; position: absolute;" />
+                <Scrapper high-value="1" value="0" direction="Horizontal" name="scrapper" style="width: 100%; top: 10%; position: absolute;" />
                 <ui:MinMaxSlider picking-mode="Ignore" min-value="0" max-value="1" low-limit="0" high-limit="1" focusable="false" name="sequence-slider" style="position: absolute; width: 100%; margin-left: 0; margin-right: 0; overflow: visible; top: 0;" />
             </ui:ScrollView>
         </ui:VisualElement>
@@ -16,15 +16,15 @@
             <ui:Button display-tooltip-when-elided="true" name="play-button" focusable="false" style="background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/Icons/play-icon.png?fileID=2800000&amp;guid=b067d3bf70e9c8a45932f9b5fc3cc26c&amp;type=3#play-icon&apos;); -unity-background-scale-mode: scale-to-fit;" />
             <ui:Button display-tooltip-when-elided="true" name="pause-button" focusable="false" style="-unity-background-scale-mode: scale-to-fit; background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/Icons/pause-icon.png?fileID=2800000&amp;guid=0b79e3944b75c744bacbc54b7e37869e&amp;type=3#pause-icon&apos;);" />
         </ui:VisualElement>
-        <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 20%; margin-top: 10px; align-self: center;">
-            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; margin-bottom: 15px; align-self: center;">
-                <ui:FloatField label="Sample Length" value="42,2" name="sample-length" readonly="true" focusable="false" />
-                <ui:IntegerField label="Start-End" value="0" name="start-sample" style="width: 50%;" />
-                <ui:IntegerField value="0" name="end-sample" style="width: 15%;" />
+        <ui:VisualElement picking-mode="Ignore" name="visualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 20%; margin-top: 10px; align-self: center;">
+            <ui:VisualElement picking-mode="Ignore" name="visualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; margin-bottom: 15px; align-self: center;">
+                <ui:FloatField label="Sample Length" value="42,2" name="sample-length" readonly="true" focusable="false" style="margin-left: 0;" />
+                <ui:FloatField label="Start-End" value="42,2" name="start-sample" />
+                <ui:FloatField value="0" name="end-sample" />
             </ui:VisualElement>
-            <ui:IntegerField label="BPM" value="0" name="bpm-field" focusable="true" style="justify-content: center; align-self: auto; width: 50%;" />
+            <ui:IntegerField label="BPM" value="0" name="bpm-field" focusable="true" style="justify-content: center; align-self: auto; width: 50%; margin-left: 0;" />
             <ui:VisualElement name="method-buttons" picking-mode="Ignore" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 30%; align-self: auto; justify-content: center; margin-top: 10px;">
-                <ui:Button text="Record" display-tooltip-when-elided="true" name="manual-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 100%; width: 40%;" />
+                <ui:Button text="Record" display-tooltip-when-elided="true" name="manual-configuration" focusable="false" class="toggle-button" style="margin-left: 0; margin-right: 0; height: 100%; width: 40%;" />
                 <ui:Button text="Automatic" display-tooltip-when-elided="true" name="automatic-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 100%; width: 40%;" />
             </ui:VisualElement>
         </ui:VisualElement>

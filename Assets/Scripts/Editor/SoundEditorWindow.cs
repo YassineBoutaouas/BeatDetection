@@ -157,6 +157,8 @@ namespace SoundElements.Editor
 
             _configureRhythm.clicked += OnConfigureRhythm;
 
+            rootVisualElement.Q<VisualElement>("main-window").RegisterCallback<KeyDownEvent>(OnPlayStateChange);
+
             EditorApplication.playModeStateChanged += OnPlayModeChange;
         }
 
@@ -279,10 +281,7 @@ namespace SoundElements.Editor
         #region Select methods
         private void OnOpenSearchTree() { SearchWindow.Open(new SearchWindowContext(GUIUtility.GUIToScreenPoint(Mouse.current.position.ReadValue())), _soundFileSearchProvider); }
 
-        private void CreateSoundElement()
-        {
-            CreateSoundElementWindow.OpenWindow(OnSelectSoundFile);
-        }
+        private void CreateSoundElement() { CreateSoundElementWindow.OpenWindow(OnSelectSoundFile); }
 
         private void OnSelectSoundFile(SoundElement soundElement)
         {
@@ -350,6 +349,8 @@ namespace SoundElements.Editor
         protected override void ReleaseEvents()
         {
             base.ReleaseEvents();
+
+            rootVisualElement.Q<VisualElement>("main-window").UnregisterCallback<KeyDownEvent>(OnPlayStateChange);
             _soundFileSearchProvider.OnRelease();
             _eventContainer.UnregisterCallback<KeyDownEvent>(RemoveEvent);
         }
