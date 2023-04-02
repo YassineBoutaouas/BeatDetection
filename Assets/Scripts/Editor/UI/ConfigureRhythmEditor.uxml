@@ -16,18 +16,28 @@
             <ui:Button display-tooltip-when-elided="true" name="play-button" focusable="false" style="background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/Icons/play-icon.png?fileID=2800000&amp;guid=b067d3bf70e9c8a45932f9b5fc3cc26c&amp;type=3#play-icon&apos;); -unity-background-scale-mode: scale-to-fit;" />
             <ui:Button display-tooltip-when-elided="true" name="pause-button" focusable="false" style="-unity-background-scale-mode: scale-to-fit; background-image: url(&apos;project://database/Assets/Scripts/Editor/UI/Icons/pause-icon.png?fileID=2800000&amp;guid=0b79e3944b75c744bacbc54b7e37869e&amp;type=3#pause-icon&apos;);" />
         </ui:VisualElement>
-        <ui:VisualElement picking-mode="Ignore" name="visualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 20%; margin-top: 10px; align-self: center;">
-            <ui:VisualElement picking-mode="Ignore" name="visualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; margin-bottom: 15px; align-self: center;">
-                <ui:FloatField label="Sample Length" value="42,2" name="sample-length" readonly="true" focusable="false" style="margin-left: 0;" />
-                <ui:FloatField label="Start-End" value="42,2" name="start-sample" />
-                <ui:FloatField value="0" name="end-sample" />
-            </ui:VisualElement>
-            <ui:IntegerField label="BPM" value="0" name="bpm-field" focusable="true" style="justify-content: center; align-self: auto; width: 50%; margin-left: 0;" />
-            <ui:VisualElement name="method-buttons" picking-mode="Ignore" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 30%; align-self: auto; justify-content: center; margin-top: 10px;">
-                <ui:Button text="Record" display-tooltip-when-elided="true" name="manual-configuration" focusable="false" class="toggle-button" style="margin-left: 0; margin-right: 0; height: 100%; width: 40%;" />
-                <ui:Button text="Automatic" display-tooltip-when-elided="true" name="automatic-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 100%; width: 40%;" />
-            </ui:VisualElement>
+        <ui:VisualElement picking-mode="Ignore" name="bpm-container" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); margin-top: 10px; align-self: center; justify-content: center; width: 80%; height: 10%; flex-direction: row;">
+            <ui:Label tabindex="-1" text="BPM" display-tooltip-when-elided="true" name="bpm-label" style="margin-right: 3px; -unity-text-align: middle-left; width: 10%; height: 50%;" />
+            <ui:IntegerField value="0" name="bpm-field" focusable="true" style="justify-content: center; align-self: auto; margin-left: 0; width: 15%; height: 50%;" />
+            <ui:Button text="Add Recording" display-tooltip-when-elided="true" name="manual-configuration" focusable="false" class="toggle-button" style="margin-left: 0; margin-right: 0; height: 50%; width: 20%;" />
+            <ui:Button text="Automatic" display-tooltip-when-elided="true" name="automatic-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 50%; width: 20%;" />
         </ui:VisualElement>
+        <ui:Foldout text="Tap Recordings" value="true" name="tap-recordings" style="width: 80%; align-self: center;">
+            <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="recordings-scroller">
+                <ui:VisualElement name="tap-recordings-container" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.2);" />
+            </ui:ScrollView>
+            <ui:VisualElement picking-mode="Ignore" name="visualElement" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; margin-bottom: 5px; margin-top: 20px; align-self: center;">
+                <ui:FloatField value="42,2" name="sample-length" readonly="true" focusable="false" label="Duration" />
+                <ui:Label tabindex="-1" text="Start-End" display-tooltip-when-elided="true" name="label" style="-unity-text-align: middle-left; width: 20%; margin-left: 5px;" />
+                <ui:FloatField value="42,2" name="start-sample" readonly="true" focusable="false" />
+                <ui:FloatField value="0" name="end-sample" readonly="true" focusable="false" />
+            </ui:VisualElement>
+            <ui:VisualElement name="visualElement" style="flex-direction: row; justify-content: center; margin-top: 5px;">
+                <ui:IntegerField label="Average BPM" value="0" name="average-bpm" readonly="true" style="width: 48%;" />
+                <ui:Button text="Calculate Average" display-tooltip-when-elided="true" focusable="false" name="calculate-average" style="align-self: center; margin-top: 0; margin-bottom: 0; margin-left: 1px; margin-right: 0; width: auto; height: 25px;" />
+                <ui:Button text="Clear Recordings" display-tooltip-when-elided="true" focusable="false" name="clear" style="height: 25px; align-self: center; margin-top: 0; margin-bottom: 0; margin-left: 1px; margin-right: 0; width: auto;" />
+            </ui:VisualElement>
+        </ui:Foldout>
     </ui:VisualElement>
-    <ui:Button text="Ok" display-tooltip-when-elided="true" focusable="false" name="ok-button" style="width: 20%; height: 25px; align-self: center; margin-top: 10px;" />
+    <ui:Button text="Ok" display-tooltip-when-elided="true" focusable="false" name="ok-button" style="width: 20%; height: 25px; margin-top: 10px; margin-bottom: 0; margin-left: 0; align-self: center;" />
 </ui:UXML>

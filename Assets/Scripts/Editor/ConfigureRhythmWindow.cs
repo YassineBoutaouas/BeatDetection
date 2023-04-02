@@ -60,11 +60,17 @@ namespace SoundElements.Editor
         private Button _recordButton;
         private Button _calcBPMButton;
 
+        private IntegerField _averageBPM;
+        private Button _calculateAverage;
+        private Button _clearRecordingsButton;
+
         private IntegerField _bpmField;
+        private VisualElement _tapRecordingsContainer;
 
         private Button _okButton;
         #endregion
 
+        #region recording members
         private Vector4 _timeSteps = new Vector4(7.5f, 15f, 30f, 60f);
 
         private float _sequenceDuration;
@@ -72,7 +78,19 @@ namespace SoundElements.Editor
         private float _sequenceEnd;
 
         private bool _isRecording = false;
-        private List<float> _taps = new List<float>();
+        private List<TapRecording> _tapRecordings = new List<TapRecording>();
+        private List<TapRecordingView> _tapRecordingElements = new List<TapRecordingView>();
+        private TapRecording _currentRecording;
+        #endregion
+
+        public class TapRecording
+        {
+            public int Taps;
+            public float Duration;
+            public int BPM;
+
+            public void Add() { Taps++; }
+        }
 
         protected override void InitFields()
         {
@@ -85,16 +103,19 @@ namespace SoundElements.Editor
             _sampleEnd = rootVisualElement.Q<FloatField>("end-sample");
 
             _sequenceSlider = rootVisualElement.Q<MinMaxSlider>("sequence-slider");
-
             _sequenceMinHandle = _sequenceSlider.Q<VisualElement>("unity-thumb-min");
             _sequenceMaxHandle = _sequenceSlider.Q<VisualElement>("unity-thumb-max");
 
             _recordButton = rootVisualElement.Q<Button>("manual-configuration");
             _calcBPMButton = rootVisualElement.Q<Button>("automatic-configuration");
-
             _bpmField = rootVisualElement.Q<IntegerField>("bpm-field");
 
             _okButton = rootVisualElement.Q<Button>("ok-button");
+
+            _tapRecordingsContainer = rootVisualElement.Q<VisualElement>("tap-recordings-container");
+            _averageBPM = rootVisualElement.Q<IntegerField>("average-bpm");
+            _calculateAverage = rootVisualElement.Q<Button>("calculate-average");
+            _clearRecordingsButton = rootVisualElement.Q<Button>("clear");
 
             SetDefaultValues();
 
@@ -114,64 +135,10 @@ namespace SoundElements.Editor
 
             rootVisualElement.RegisterCallback<KeyDownEvent>(OnTap);
 
+            _calculateAverage.clicked += CalculateAverageBPM;
+            _clearRecordingsButton.clicked += ClearTapRecordings;
+
             _okButton.clicked += OnClose;
-        }
-
-        protected override void ReleaseEvents()
-        {
-            base.ReleaseEvents();
-
-            _sequenceSlider.UnregisterCallback<ChangeEvent<Vector2>>(OnSequenceSliderChange);
-            _scrapper.UnregisterCallback<ChangeEvent<float>>(ClampAudioTime);
-            _bpmField.UnregisterCallback<ChangeEvent<int>>(OnBPMChange);
-
-            _recordButton.clicked -= OnRecordChange;
-            _calcBPMButton.clicked -= OnBPMCalculate;
-
-            rootVisualElement.UnregisterCallback<KeyDownEvent>(OnTap);
-
-            _okButton.clicked -= OnClose;
-        }
-
-        private void OnBPMCalculate() { _bpmField.value = RhythmReader.CalculateBPM(_soundElement); }
-
-        private void OnRecordChange()
-        {
-            _isRecording = !_isRecording;
-
-            StyleColor styleColor = _recordButton.style.backgroundColor;
-            styleColor.value = _isRecording ? _toggleColor : _defaultColor;
-            _recordButton.style.backgroundColor = styleColor;
-
-            if (_taps.Count == 0) return;
-
-            for (int i = 0; i < _taps.Count; i++)
-            {
-                Debug.Log(_taps[i]);
-            }
-
-            Debug.Log((_taps.Count / _sequenceDuration) * 60); 
-
-            _taps.Clear();
-        }
-
-        private void OnTap(KeyDownEvent keyDownEvent)
-        {
-            if (keyDownEvent.keyCode == KeyCode.Space) return;
-
-            if (_isRecording && _isPlaying)
-            {
-                _taps.Add(_currentTimeStamp);
-
-                //Debug.Log($"{_currentTimeStamp} ; {_scrapper.value} ; {_scrapper.value * _soundElement.AudioClip.length}");
-            }
-        }
-
-        private void OnBPMChange(ChangeEvent<int> evtChange)
-        {
-            _serializedObject.Update();
-            _soundElement.BPM = evtChange.newValue;
-            _serializedObject.ApplyModifiedProperties();
         }
 
         private void SetDefaultValues()
@@ -191,6 +158,88 @@ namespace SoundElements.Editor
             _sampleStart.value = _sequenceStart;
             _sampleEnd.value = _sequenceEnd;
             _sampleLength.value = _sequenceDuration;
+        }
+
+        protected override void ReleaseEvents()
+        {
+            base.ReleaseEvents();
+
+            _sequenceSlider.UnregisterCallback<ChangeEvent<Vector2>>(OnSequenceSliderChange);
+            _scrapper.UnregisterCallback<ChangeEvent<float>>(ClampAudioTime);
+            _bpmField.UnregisterCallback<ChangeEvent<int>>(OnBPMChange);
+
+            _recordButton.clicked -= OnRecordChange;
+            _calcBPMButton.clicked -= OnBPMCalculate;
+
+            rootVisualElement.UnregisterCallback<KeyDownEvent>(OnTap);
+
+            _calculateAverage.clicked -= CalculateAverageBPM;
+            _clearRecordingsButton.clicked -= ClearTapRecordings;
+
+            _okButton.clicked -= OnClose;
+        }
+
+        private void OnBPMCalculate() { _bpmField.value = RhythmReader.CalculateBPM(_soundElement); }
+
+        #region Recording methods
+        private void OnRecordChange()
+        {
+            _isRecording = !_isRecording;
+
+            StyleColor styleColor = _recordButton.style.backgroundColor;
+            styleColor.value = _isRecording ? _toggleColor : _defaultColor;
+            _recordButton.style.backgroundColor = styleColor;
+
+            if (!_isRecording)
+            {
+                if (_currentRecording.Taps == 0) return;
+
+                _currentRecording.BPM = (int)((_currentRecording.Taps / _sequenceDuration) * 60);
+                _tapRecordingElements.Add(new TapRecordingView(_tapRecordingsContainer, _currentRecording, _tapRecordings, _tapRecordingElements));
+
+                return;
+            }
+
+            _currentRecording = new TapRecording();
+            _currentRecording.Duration = _sequenceDuration;
+            _tapRecordings.Add(_currentRecording);
+        }
+
+        private void CalculateAverageBPM()
+        {
+            int bpmSum = 0;
+
+            foreach (TapRecordingView tapRecordingView in _tapRecordingElements)
+                bpmSum += tapRecordingView._tapRecording.BPM;
+
+            _averageBPM.value = bpmSum / _tapRecordingElements.Count;
+        }
+
+        private void ClearTapRecordings()
+        {
+            _tapRecordingElements.Clear();
+            _tapRecordingsContainer.Clear();
+            _tapRecordings.Clear();
+            _currentRecording = null;
+
+            OnStopSoundFile();
+            _isRecording = false;
+        }
+
+        private void OnTap(KeyDownEvent keyDownEvent)
+        {
+            if (keyDownEvent.keyCode == KeyCode.Space) return;
+
+            if (_isRecording && _isPlaying)
+                _currentRecording.Add();
+        }
+        #endregion
+
+        private void OnBPMChange(ChangeEvent<int> evtChange)
+        {
+            _serializedObject.Update();
+            _soundElement.BPM = evtChange.newValue;
+            _serializedObject.ApplyModifiedProperties();
         }
 
         private void OnSequenceSliderChange(ChangeEvent<Vector2> evtCallback)
@@ -234,6 +283,9 @@ namespace SoundElements.Editor
         {
             _serializedObject.Update();
             _serializedObject.ApplyModifiedProperties();
+
+            ClearTapRecordings();
+
             Close();
         }
     }

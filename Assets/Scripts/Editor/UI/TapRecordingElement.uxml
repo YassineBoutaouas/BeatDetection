@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Scripts/Editor/UI/TapRecordin_Style.uss?fileID=7433441132597879392&amp;guid=7e50557ae9ea1ac449aac0fcf095970f&amp;type=3#TapRecordin_Style" />
+    <ui:VisualElement name="visualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; flex-shrink: 0;">
+        <ui:Label tabindex="-1" text="Duration" display-tooltip-when-elided="true" name="label" style="align-self: center; width: 40%; flex-shrink: 1;" />
+        <ui:FloatField value="42,2" name="duration" readonly="true" style="width: 40%; flex-shrink: 1;" />
+        <ui:Label tabindex="-1" text="Taps" display-tooltip-when-elided="true" name="label" style="align-self: center; width: 40%; flex-shrink: 1;" />
+        <ui:IntegerField value="42" name="taps" focusable="true" readonly="true" style="width: 40%; flex-shrink: 1;" />
+        <ui:Label tabindex="-1" text="BPM" display-tooltip-when-elided="true" name="label" style="align-self: center; width: 40%; flex-shrink: 1;" />
+        <ui:IntegerField value="42" name="bpm" readonly="true" style="width: 40%; flex-shrink: 1;" />
+        <ui:Button text="X" display-tooltip-when-elided="true" name="remove" focusable="false" class="remove-button" style="flex-shrink: 1; height: 100%;" />
+    </ui:VisualElement>
+</ui:UXML>

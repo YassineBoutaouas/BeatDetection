@@ -371,7 +371,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoundElement: {fileID: 11400000, guid: 11e67a5a56fa43c41ba0970994e59b57, type: 2}
-  BPM: 0
   Standard: {r: 0, g: 3.6381867, b: 3.6573353, a: 0}
   Drop: {r: 7.018868, g: 0, b: 0.46328533, a: 0}
 --- !u!1 &410087039

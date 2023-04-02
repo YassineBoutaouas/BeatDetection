@@ -17,9 +17,6 @@ namespace SoundElements.Editor
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-
-            if(GUILayout.Button("Calculate BPM"))
-                Debug.Log(RhythmReader.CalculateBPM(_soundPlayer.SoundElement));
         }
     }
 }
