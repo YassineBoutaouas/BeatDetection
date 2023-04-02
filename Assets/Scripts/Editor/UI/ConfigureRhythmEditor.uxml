@@ -22,7 +22,9 @@
             <ui:Button text="Add Recording" display-tooltip-when-elided="true" name="manual-configuration" focusable="false" class="toggle-button" style="margin-left: 0; margin-right: 0; height: 50%; width: 20%;" />
             <ui:Button text="Automatic" display-tooltip-when-elided="true" name="automatic-configuration" focusable="false" style="margin-left: 0; margin-right: 0; height: 50%; width: 20%;" />
         </ui:VisualElement>
-        <ui:Foldout text="Tap Recordings" value="true" name="tap-recordings" style="width: 80%; align-self: center;">
+        <ui:Label tabindex="-1" text="Interpolation Curve" display-tooltip-when-elided="true" name="label" style="align-self: center; width: 60%;" />
+        <uie:CurveField name="curve" style="width: 60%; height: 10%; align-self: center; justify-content: center; margin-bottom: 8px;" />
+        <ui:Foldout text="Tap Recordings" value="false" name="tap-recordings" style="width: 80%; align-self: center;">
             <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="recordings-scroller">
                 <ui:VisualElement name="tap-recordings-container" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.2);" />
             </ui:ScrollView>

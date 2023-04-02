@@ -1,9 +1,8 @@
 #if UNITY_EDITOR
-using Codice.Client.Common;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace SoundElements.Editor
@@ -46,8 +45,6 @@ namespace SoundElements.Editor
         }
         #endregion
 
-        private SoundEditorWindow _parentView;
-
         #region VisualElements
         private FloatField _sampleLength;
         private FloatField _sampleStart;
@@ -68,6 +65,8 @@ namespace SoundElements.Editor
         private VisualElement _tapRecordingsContainer;
 
         private Button _okButton;
+
+        private CurveField _curveField;
         #endregion
 
         #region recording members
@@ -117,28 +116,11 @@ namespace SoundElements.Editor
             _calculateAverage = rootVisualElement.Q<Button>("calculate-average");
             _clearRecordingsButton = rootVisualElement.Q<Button>("clear");
 
+            _curveField = rootVisualElement.Q<CurveField>();
+
             SetDefaultValues();
 
             SetEvents();
-        }
-
-        protected override void SetEvents()
-        {
-            base.SetEvents();
-
-            _sequenceSlider.RegisterCallback<ChangeEvent<Vector2>>(OnSequenceSliderChange);
-            _scrapper.RegisterCallback<ChangeEvent<float>>(ClampAudioTime);
-            _bpmField.RegisterCallback<ChangeEvent<int>>(OnBPMChange);
-
-            _recordButton.clicked += OnRecordChange;
-            _calcBPMButton.clicked += OnBPMCalculate;
-
-            rootVisualElement.RegisterCallback<KeyDownEvent>(OnTap);
-
-            _calculateAverage.clicked += CalculateAverageBPM;
-            _clearRecordingsButton.clicked += ClearTapRecordings;
-
-            _okButton.clicked += OnClose;
         }
 
         private void SetDefaultValues()
@@ -158,27 +140,90 @@ namespace SoundElements.Editor
             _sampleStart.value = _sequenceStart;
             _sampleEnd.value = _sequenceEnd;
             _sampleLength.value = _sequenceDuration;
+
+            InitAnimationCurve();
+        }
+
+        protected override void SetEvents()
+        {
+            base.SetEvents();
+
+            _sequenceSlider.RegisterCallback<ChangeEvent<Vector2>>(OnSequenceSliderChange);
+            _scrapper.RegisterCallback<ChangeEvent<float>>(ClampAudioTime);
+            _bpmField.RegisterCallback<ChangeEvent<int>>(OnBPMChange);
+
+            _curveField.RegisterCallback<ChangeEvent<AnimationCurve>>(OnAnimationCurveChange);
+
+            _recordButton.clicked += OnRecordChange;
+            _calcBPMButton.clicked += OnBPMCalculate;
+
+            rootVisualElement.RegisterCallback<KeyDownEvent>(OnTap);
+
+            _calculateAverage.clicked += CalculateAverageBPM;
+            _clearRecordingsButton.clicked += ClearTapRecordings;
+
+            _okButton.clicked += OnClose;
         }
 
         protected override void ReleaseEvents()
         {
             base.ReleaseEvents();
 
-            _sequenceSlider.UnregisterCallback<ChangeEvent<Vector2>>(OnSequenceSliderChange);
-            _scrapper.UnregisterCallback<ChangeEvent<float>>(ClampAudioTime);
-            _bpmField.UnregisterCallback<ChangeEvent<int>>(OnBPMChange);
+            _sequenceSlider?.UnregisterCallback<ChangeEvent<Vector2>>(OnSequenceSliderChange);
+            _scrapper?.UnregisterCallback<ChangeEvent<float>>(ClampAudioTime);
+            _bpmField?.UnregisterCallback<ChangeEvent<int>>(OnBPMChange);
 
-            _recordButton.clicked -= OnRecordChange;
-            _calcBPMButton.clicked -= OnBPMCalculate;
+            _curveField?.UnregisterCallback<ChangeEvent<AnimationCurve>>(OnAnimationCurveChange);
 
-            rootVisualElement.UnregisterCallback<KeyDownEvent>(OnTap);
+            if (_recordButton != null) _recordButton.clicked -= OnRecordChange;
+            if (_calcBPMButton != null) _calcBPMButton.clicked -= OnBPMCalculate;
 
-            _calculateAverage.clicked -= CalculateAverageBPM;
-            _clearRecordingsButton.clicked -= ClearTapRecordings;
+            rootVisualElement?.UnregisterCallback<KeyDownEvent>(OnTap);
 
-            _okButton.clicked -= OnClose;
+            if (_calculateAverage != null) _calculateAverage.clicked -= CalculateAverageBPM;
+            if (_clearRecordingsButton != null) _clearRecordingsButton.clicked -= ClearTapRecordings;
+
+            if (_okButton != null) _okButton.clicked -= OnClose;
         }
 
+        private void InitAnimationCurve()
+        {
+            _serializedObject.Update();
+
+            bool isleftKeyPresent = false;
+            bool isrightKeyPresent = false;
+
+            for (int i = 0; i < _soundElement.InterpolationCurve.keys.Length; i++)
+            {
+                Keyframe keyFrame = _soundElement.InterpolationCurve.keys[i];
+                if (keyFrame.value == 1 && keyFrame.time == 0)
+                {
+                    isleftKeyPresent = true;
+                    continue;
+                }
+
+                if (keyFrame.value == 1 && keyFrame.time == 1)
+                    isrightKeyPresent = true;
+            }
+
+            if(!isleftKeyPresent)
+                _soundElement.InterpolationCurve.AddKey(0, 1);
+
+            if(!isrightKeyPresent)
+                _soundElement.InterpolationCurve.AddKey(1, 1);
+
+            _serializedObject.ApplyModifiedProperties();
+            _curveField.value = _soundElement.InterpolationCurve;
+        }
+
+        private void OnAnimationCurveChange(ChangeEvent<AnimationCurve> animationCurve)
+        {
+            _serializedObject.Update();
+            _soundElement.InterpolationCurve = animationCurve.newValue;
+            _serializedObject.ApplyModifiedProperties();
+        }
+
+        #region BPM Configuration Methods
         private void OnBPMCalculate() { _bpmField.value = RhythmReader.CalculateBPM(_soundElement); }
 
         #region Recording methods
@@ -212,7 +257,8 @@ namespace SoundElements.Editor
             foreach (TapRecordingView tapRecordingView in _tapRecordingElements)
                 bpmSum += tapRecordingView._tapRecording.BPM;
 
-            _averageBPM.value = bpmSum / _tapRecordingElements.Count;
+            if(_tapRecordingElements.Count > 0)
+                _averageBPM.value = bpmSum / _tapRecordingElements.Count;
         }
 
         private void ClearTapRecordings()
@@ -241,7 +287,9 @@ namespace SoundElements.Editor
             _soundElement.BPM = evtChange.newValue;
             _serializedObject.ApplyModifiedProperties();
         }
+        #endregion
 
+        #region Slider Methods
         private void OnSequenceSliderChange(ChangeEvent<Vector2> evtCallback)
         {
             if (evtCallback.previousValue.x != evtCallback.newValue.x)
@@ -278,6 +326,7 @@ namespace SoundElements.Editor
             }
 
         }
+        #endregion
 
         private void OnClose()
         {

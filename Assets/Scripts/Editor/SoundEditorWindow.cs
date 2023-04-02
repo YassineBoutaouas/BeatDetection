@@ -350,9 +350,9 @@ namespace SoundElements.Editor
         {
             base.ReleaseEvents();
 
-            rootVisualElement.Q<VisualElement>("main-window").UnregisterCallback<KeyDownEvent>(OnPlayStateChange);
-            _soundFileSearchProvider.OnRelease();
-            _eventContainer.UnregisterCallback<KeyDownEvent>(RemoveEvent);
+            rootVisualElement.Q<VisualElement>("main-window")?.UnregisterCallback<KeyDownEvent>(OnPlayStateChange);
+            _soundFileSearchProvider?.OnRelease();
+            _eventContainer?.UnregisterCallback<KeyDownEvent>(RemoveEvent);
         }
     }
 

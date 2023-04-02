@@ -371,8 +371,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoundElement: {fileID: 11400000, guid: 11e67a5a56fa43c41ba0970994e59b57, type: 2}
-  Standard: {r: 0, g: 3.6381867, b: 3.6573353, a: 0}
-  Drop: {r: 7.018868, g: 0, b: 0.46328533, a: 0}
+  Standard: {r: 0, g: 0.23529412, b: 0.23529412, a: 0}
+  Drop: {r: 16.442995, g: 0, b: 1.0853314, a: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,7 +390,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &410087040
 Light:
   m_ObjectHideFlags: 0

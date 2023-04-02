@@ -14,4 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: HipHop
   AudioClip: {fileID: 8300000, guid: 2c47ca79a81fedb4eadd38e56f4a0280, type: 3}
+  BPM: 0
+  InterpolationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   SoundEvents: []

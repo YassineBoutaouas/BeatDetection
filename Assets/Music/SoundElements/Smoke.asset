@@ -14,4 +14,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Smoke
   AudioClip: {fileID: 8300000, guid: 9de95b4116ae5d44b876012e7ce18853, type: 3}
-  SoundEvents: []
+  BPM: 105
+  InterpolationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.20000002
+      value: 0
+      inSlope: -0.03815557
+      outSlope: 0
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 0.38719353
+      outWeight: 0.09881991
+    - serializedVersion: 3
+      time: 0.8000708
+      value: 0
+      inSlope: -0
+      outSlope: 0.0049940515
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.31633464
+    - serializedVersion: 3
+      time: 0.95
+      value: 1
+      inSlope: 0.03208294
+      outSlope: 0
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 0.4554205
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0
+      outSlope: 0
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  SoundEvents:
+  - MethodName: OnDrop
+    TimeStamp: 18.489855
+    FloatValue: 0
+    IntValue: 0
+    StringValue: 
+    BoolValue: 0

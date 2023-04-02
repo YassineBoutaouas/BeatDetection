@@ -1,7 +1,4 @@
 #if UNITY_EDITOR
-using SoundElements;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -199,13 +196,14 @@ namespace SoundElements.Editor
         protected virtual void ReleaseEvents()
         {
             OnStopSoundFile();
-            _volumeSlider.UnregisterCallback<ChangeEvent<float>>(ChangeVolume);
 
-            _playButton.clicked -= OnPlaySoundFile;
-            _pauseButton.clicked -= OnPauseSoundFile;
-            _stopButton.clicked -= OnStopSoundFile;
+            _volumeSlider?.UnregisterCallback<ChangeEvent<float>>(ChangeVolume);
 
-            _scrapper.valueChanged -= OnUpdateCurrentTime;
+            if(_playButton != null) _playButton.clicked -= OnPlaySoundFile;
+            if (_pauseButton != null) _pauseButton.clicked -= OnPauseSoundFile;
+            if (_stopButton != null) _stopButton.clicked -= OnStopSoundFile;
+
+            if (_scrapper != null) _scrapper.valueChanged -= OnUpdateCurrentTime;
 
             EditorApplication.playModeStateChanged -= OnPlayModeChange;
         }

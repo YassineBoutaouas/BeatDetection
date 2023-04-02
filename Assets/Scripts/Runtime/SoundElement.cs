@@ -10,6 +10,8 @@ namespace SoundElements
         public AudioClip AudioClip;
         public int BPM;
 
+        public AnimationCurve InterpolationCurve;
+
         [NonReorderable] public List<SoundEvent> SoundEvents = new List<SoundEvent>();
     }
 
