@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df05dc63a6e3b254496f912406b0297a, type: 3}
-  m_Name: HipHop
+  m_Name: Beat
   m_EditorClassIdentifier: 
-  Name: HipHop
-  AudioClip: {fileID: 8300000, guid: 2c47ca79a81fedb4eadd38e56f4a0280, type: 3}
+  Name: Beat
+  AudioClip: {fileID: 8300000, guid: 9de95b4116ae5d44b876012e7ce18853, type: 3}
   BPM: 0
   InterpolationCurve:
     serializedVersion: 2
@@ -21,4 +21,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  SoundEvents: []
+  SoundEvents:
+  - MethodName: OnDrop
+    TimeStamp: 18.486347
+    FloatValue: 0
+    IntValue: 0
+    StringValue: 
+    BoolValue: 0
