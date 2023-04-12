@@ -237,7 +237,7 @@ namespace SoundElements.Editor
         /// <summary>
         /// Runs an algorithm to calculate the BPM
         /// </summary>
-        private void OnBPMCalculate() { _bpmField.value = RhythmReader.CalculateBPM(_soundElement); }
+        private void OnBPMCalculate() { _bpmField.value = RhythmReader.CalculateBPM(_soundElement.AudioClip); }
 
         #region Recording methods
         /// <summary>

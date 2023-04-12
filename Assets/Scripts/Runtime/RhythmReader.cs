@@ -16,18 +16,21 @@ namespace SoundElements
             public int BPM;
         }
 
-        public static int CalculateBPM(SoundElement soundElement)
+        /// <summary>
+        /// Calculates the BPM of a sound elements audio clip
+        /// </summary>
+        public static int CalculateBPM(AudioClip soundElement)
         {
             ///Get samples
-            float[] allSamples = new float[soundElement.AudioClip.samples * soundElement.AudioClip.channels];
-            soundElement.AudioClip.GetData(allSamples, 0);
+            float[] allSamples = new float[soundElement.samples * soundElement.channels];
+            soundElement.GetData(allSamples, 0);
 
             ///Set a sample duration
             float sampleDuration = 0.1f;
 
             ///amount of samples in 0.1s
-            int segmentSampleAmount = Mathf.FloorToInt((soundElement.AudioClip.frequency * sampleDuration) / soundElement.AudioClip.channels);
-            float splitFrequency = soundElement.AudioClip.frequency / segmentSampleAmount;
+            int segmentSampleAmount = Mathf.FloorToInt((soundElement.frequency * sampleDuration) / soundElement.channels);
+            float splitFrequency = soundElement.frequency / segmentSampleAmount;
 
             ///amount of total segments in the file
             int totalSegments = Mathf.CeilToInt((float)allSamples.Length / (float)segmentSampleAmount);
@@ -52,6 +55,9 @@ namespace SoundElements
             return BPMMatches[MatchBPM(frequencyChanges, splitFrequency)].BPM;
         }
 
+        /// <summary>
+        /// Iterates through possible BPMs and tries to find the BPM that matches the amount of energy changes the most
+        /// </summary>
         public static int MatchBPM(List<float> frequencyChanges, float splitFrequency)
         {
             int index = 0;
@@ -80,6 +86,9 @@ namespace SoundElements
             return Array.FindIndex(BPMMatches, x => x.Match == BPMMatches.Max(y => y.Match));
         }
 
+        /// <summary>
+        /// Gets the average energy of each segment
+        /// </summary>
         public static List<float> CalculateChanges(List<float[]> segments, int segmentSampleAmount)
         {
             ///Calculate average frequency for each segment!
@@ -97,6 +106,7 @@ namespace SoundElements
                 averages[i] = sum / segmentSampleAmount;
             }
 
+            ///Calulates the frequency changes of the frenquency bands over a time lag
             List<float> frequencyChanges = new List<float>();
             for (int i = 1; i < averages.Length; i++)
             {
