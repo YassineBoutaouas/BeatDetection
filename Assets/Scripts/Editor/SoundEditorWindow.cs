@@ -236,7 +236,7 @@ namespace SoundElements.Editor
 
         private void SelectEvent()
         {
-            EventElement focus = (EventElement)_eventContainer.focusController.focusedElement;
+            EventElement focus = _eventContainer.focusController.focusedElement as EventElement;
 
             if (focus == null)
             {

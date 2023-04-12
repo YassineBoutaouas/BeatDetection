@@ -14,16 +14,70 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Beat
   AudioClip: {fileID: 8300000, guid: 9de95b4116ae5d44b876012e7ce18853, type: 3}
-  BPM: 0
+  BPM: 105
   InterpolationCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.15
+      value: 0
+      inSlope: -6.6666665
+      outSlope: 0
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.85
+      value: 0
+      inSlope: 0
+      outSlope: 6.666668
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.27709487
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   SoundEvents:
   - MethodName: OnDrop
     TimeStamp: 18.486347
+    FloatValue: 1.2
+    IntValue: 2
+    StringValue: 
+    BoolValue: 1
+  - MethodName: OnLow
+    TimeStamp: 55.447155
+    FloatValue: 0
+    IntValue: 0
+    StringValue: 
+    BoolValue: 0
+  - MethodName: OnDrop
+    TimeStamp: 73.26775
+    FloatValue: 0
+    IntValue: 0
+    StringValue: 
+    BoolValue: 0
+  - MethodName: OnEnd
+    TimeStamp: 110.77543
     FloatValue: 0
     IntValue: 0
     StringValue: 
