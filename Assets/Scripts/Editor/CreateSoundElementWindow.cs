@@ -6,6 +6,9 @@ using UnityEngine.UIElements;
 
 namespace SoundElements.Editor
 {
+    /// <summary>
+    /// This class provides a modal editor to create a new SoundElement.asset at a given path
+    /// </summary>
     public class CreateSoundElementWindow : EditorWindow
     {
         private const string _createSoundElementPath = "Assets/Scripts/Editor/UI/CreateSoundElementEditor.uxml";
@@ -69,10 +72,13 @@ namespace SoundElements.Editor
             string absolutePath = EditorUtility.OpenFolderPanel("Select folder", "Assets/Scripts", "");
             if (absolutePath == null || absolutePath == "") return;
 
-            _selectedPath = absolutePath.Substring(absolutePath.IndexOf("Assets/"));
+            _selectedPath = absolutePath[absolutePath.IndexOf("Assets/")..];
             _pathLabel.text = _selectedPath;
         }
 
+        /// <summary>
+        /// Saves a new SoundElement.asset at a given path based on the given inputs
+        /// </summary>
         private void SaveNewSoundElement()
         {
             if (_selectedPath == null)

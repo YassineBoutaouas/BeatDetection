@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 
 namespace SoundElements.Editor
 {
+    /// <summary>
+    /// This editor window provides three methods to configure the rhythm/tempo of a given sound element
+    /// </summary>
     public class ConfigureRhythmWindow : SoundEditor
     {
         #region Static members
@@ -82,6 +85,9 @@ namespace SoundElements.Editor
         private TapRecording _currentRecording;
         #endregion
 
+        /// <summary>
+        /// Stores the amount of beats within a given time frame in order to calculate the BPM
+        /// </summary>
         public class TapRecording
         {
             public int Taps;
@@ -215,7 +221,11 @@ namespace SoundElements.Editor
             _serializedObject.ApplyModifiedProperties();
             _curveField.value = _soundElement.InterpolationCurve;
         }
-
+        
+        /// <summary>
+        /// Stores an animation curve in order to internally modify the timing of a beat. Can be used to widen the input window in a rhythm game.
+        /// </summary>
+        /// <param name="animationCurve"></param>
         private void OnAnimationCurveChange(ChangeEvent<AnimationCurve> animationCurve)
         {
             _serializedObject.Update();
@@ -224,9 +234,15 @@ namespace SoundElements.Editor
         }
 
         #region BPM Configuration Methods
+        /// <summary>
+        /// Runs an algorithm to calculate the BPM
+        /// </summary>
         private void OnBPMCalculate() { _bpmField.value = RhythmReader.CalculateBPM(_soundElement); }
 
         #region Recording methods
+        /// <summary>
+        /// Stores the recording state of the editor in order to start or stop a tap recording
+        /// </summary>
         private void OnRecordChange()
         {
             _isRecording = !_isRecording;
@@ -272,6 +288,9 @@ namespace SoundElements.Editor
             _isRecording = false;
         }
 
+        /// <summary>
+        /// Adds to the count of taps through pressing the space bar in a given time frame in order to estimate the BPM
+        /// </summary>
         private void OnTap(KeyDownEvent keyDownEvent)
         {
             if (keyDownEvent.keyCode == KeyCode.Space) return;
@@ -281,6 +300,9 @@ namespace SoundElements.Editor
         }
         #endregion
 
+        /// <summary>
+        /// Stores the BPM in the SoundElement.asset
+        /// </summary>
         private void OnBPMChange(ChangeEvent<int> evtChange)
         {
             _serializedObject.Update();
@@ -290,6 +312,9 @@ namespace SoundElements.Editor
         #endregion
 
         #region Slider Methods
+        /// <summary>
+        /// Stores information such as the start, the end and the duration of the recorded sequence
+        /// </summary>
         private void OnSequenceSliderChange(ChangeEvent<Vector2> evtCallback)
         {
             if (evtCallback.previousValue.x != evtCallback.newValue.x)
@@ -308,6 +333,9 @@ namespace SoundElements.Editor
             _scrapper.value = evtCallback.newValue.x;
         }
 
+        /// <summary>
+        /// Clamps the audio playback to the upper and lower bounds of the recording frame
+        /// </summary>
         private void ClampAudioTime(ChangeEvent<float> evtCallback)
         {
             _scrapper.value = Mathf.Clamp(_scrapper.value, _sequenceSlider.value.x, _sequenceSlider.value.y);

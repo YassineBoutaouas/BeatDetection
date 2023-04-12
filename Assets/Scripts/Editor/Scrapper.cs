@@ -3,6 +3,9 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// This class provides a scroller for the sound editor window
+/// </summary>
 public class Scrapper : Scroller
 {
     public new class UxmlFactory : UxmlFactory<Scrapper, UxmlTraits> { }

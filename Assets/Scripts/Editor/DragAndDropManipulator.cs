@@ -4,6 +4,9 @@ using UnityEngine.UIElements;
 
 namespace SoundElements.Editor
 {
+    /// <summary>
+    /// This class provides functionality to move a sound event and to change the time it is invoked
+    /// </summary>
     public class DragAndDropManipulator : PointerManipulator
     {
         private VisualElement _referenceContainer;

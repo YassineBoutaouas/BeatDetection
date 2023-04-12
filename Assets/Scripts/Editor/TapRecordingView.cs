@@ -6,6 +6,9 @@ using static SoundElements.Editor.ConfigureRhythmWindow;
 
 namespace SoundElements.Editor
 {
+    /// <summary>
+    /// This class provides information of a tap recording
+    /// </summary>
     public class TapRecordingView : VisualElement
     {
         public TapRecording _tapRecording;

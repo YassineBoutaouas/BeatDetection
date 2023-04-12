@@ -11,6 +11,9 @@ using UnityEngine.UIElements;
 
 namespace SoundElements.Editor
 {
+    /// <summary>
+    /// This class provides a main editor for sound configuration and event creation
+    /// </summary>
     public class SoundEditorWindow : SoundEditor
     {
         #region Static members
@@ -169,7 +172,7 @@ namespace SoundElements.Editor
             ConfigureRhythmWindow.OpenWindow(_serializedObject, _soundElement, _waveFormContainer, _wavesArray, _sampleArray, _sampleSize, position);
         }
 
-        #region Event methods
+        #region Event methods (Creating, modifying and removing)
         private void CreateEventContext(ContextualMenuPopulateEvent menuBuilder)
         {
             menuBuilder.menu.AppendAction("Add Sound Event", AddEvent, DropdownMenuAction.Status.Normal);
@@ -356,6 +359,9 @@ namespace SoundElements.Editor
         }
     }
 
+    /// <summary>
+    /// A visual element that contains and exposes information of a given sound event.
+    /// </summary>
     public class EventElement : VisualElement
     {
         public SoundEvent _soundEvent;
@@ -380,6 +386,9 @@ namespace SoundElements.Editor
         }
     }
 
+    /// <summary>
+    /// A search provider that allows to look for and change the current sound element within the main sound editor window
+    /// </summary>
     public class SoundFileSearchProvider : ScriptableObject, ISearchWindowProvider
     {
         public System.Action<SoundElement> OnSelectedSoundFile;

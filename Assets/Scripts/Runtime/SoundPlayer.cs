@@ -3,12 +3,19 @@ using UnityEngine;
 
 namespace SoundElements
 {
+    /// <summary>
+    /// This class provides runtime functionality to invoke events associated to a SoundElement.asset and its audioclip
+    /// </summary>
     public abstract class SoundPlayer : MonoBehaviour
     {
         public SoundElement SoundElement;
         public System.Action OnBeat;
 
         protected AudioSource _audioSource;
+
+        /// <summary>
+        /// Keeps track of the current event that shall be invoked
+        /// </summary>
         public float CurrentEventIndex { get; private set; }
 
         public float BPS { get; private set; }
@@ -20,10 +27,13 @@ namespace SoundElements
             _audioSource = gameObject.AddComponent<AudioSource>();
             _audioSource.clip = SoundElement.AudioClip;
 
-            if (SoundElement.BPM > 0) 
+            if (SoundElement.BPM > 0)
                 BPS = 60f / (float)SoundElement.BPM;
         }
 
+        /// <summary>
+        /// Resets the current event index and plays the audio source
+        /// </summary>
         public void Play()
         {
             CurrentEventIndex = 0;
@@ -32,6 +42,10 @@ namespace SoundElements
 
         protected virtual void Update() { }
 
+        /// <summary>
+        /// Iterates through the events during the playtime of an audio source. 
+        /// If the audiosource.time corresponds to the currenteventindex the event with that index is invoked. 
+        /// </summary>
         protected virtual void UpdateEvents()
         {
             if (!_audioSource.isPlaying) return;
@@ -50,6 +64,10 @@ namespace SoundElements
             }
         }
 
+        /// <summary>
+        /// Interpolates the animation curve provided by the soundelement and assigns a float value.
+        /// That value can be used to widen the input window or to ease animation between beats
+        /// </summary>
         protected virtual void UpdateBeatTimer()
         {
             if (_beatTimer < BPS)

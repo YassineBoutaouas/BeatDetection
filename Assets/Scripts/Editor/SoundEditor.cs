@@ -5,7 +5,9 @@ using UnityEngine.UIElements;
 
 namespace SoundElements.Editor
 {
-
+    /// <summary>
+    /// This is a wrapper class that contains common functionality for an audio editor
+    /// </summary>
     public class SoundEditor : EditorWindow
     {
         public string uxmlPath;
@@ -48,6 +50,9 @@ namespace SoundElements.Editor
         protected void ApplySerializedObject() { _serializedObject.ApplyModifiedProperties(); }
         #endregion
 
+        /// <summary>
+        /// Initializes all of the fields needed for the editor
+        /// </summary>
         protected virtual void InitFields()
         {
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(uxmlPath);
@@ -70,6 +75,9 @@ namespace SoundElements.Editor
             _scrapper = rootVisualElement.Q<Scrapper>();
         }
 
+        /// <summary>
+        /// Creates a temporary gameObject with an audio source to be played - it is destroyed when the window is closed
+        /// </summary>
         protected void CreateSoundObject()
         {
             _audioObject = new GameObject("Temp_AudioObject");
@@ -79,6 +87,9 @@ namespace SoundElements.Editor
 
         protected virtual void CreateGUI() { }
 
+        /// <summary>
+        /// Subscribe events
+        /// </summary>
         protected virtual void SetEvents()
         {
             _volumeSlider.RegisterCallback<ChangeEvent<float>>(ChangeVolume);
@@ -102,6 +113,9 @@ namespace SoundElements.Editor
 
         protected virtual void OnGUI() { _scrapper.DraggerBody.transform.scale = new Vector3(_scrapper.DraggerBody.transform.scale.x, _waveFormContainer.resolvedStyle.height); }
 
+        /// <summary>
+        /// Updates the scrapper position to correspond to the current time of the audio that is currently playing
+        /// </summary>
         protected virtual void Update()
         {
             if (!_isPlaying || _audioSource.clip == null) return;
@@ -109,6 +123,9 @@ namespace SoundElements.Editor
             _scrapper.value = _audioSource.time / _soundElement.AudioClip.length;
         }
 
+        /// <summary>
+        /// Is invoked when the current time of the audio is updated
+        /// </summary>
         protected void OnUpdateCurrentTime(float time)
         {
             if (_soundElement == null) return;
@@ -193,6 +210,9 @@ namespace SoundElements.Editor
             }
         }
 
+        /// <summary>
+        /// Releases all of the bound events
+        /// </summary>
         protected virtual void ReleaseEvents()
         {
             OnStopSoundFile();
