@@ -1,14 +1,15 @@
-# BeatDetection
+# Audio Editor
+### (Audio Player, Configurable Events and Rhythm Configuration)
 
-The project was developed as an extension to the game [(G)raveyard](https://github.com/YassineBoutaouas/Graveyard) - a combat rhythm game. 
-It provides a multi-part editor that allows for audio configuration.
+The project was developed as an extension to a previously developed combat rhythm game. 
+It provides a multi-part editor that provides audio controls, an event system similar to animation events and rhythm configuration.
 
 ## Runtime classes
 - SoundElement : ScriptableObject - extends the built-in AudioClip. It stores a BPM as well as a List of SoundEvents and an animation curve to allow for easing in between two beats 
 (e.g.: Could be used to widen the input window in a rhythm game - allows the user to press the button slighly before or after a beat).
 
 - SoundEvent - (similar to animation event) - stores values that are passed through a method corresponding to the name that it stores. [See](https://docs.unity3d.com/ScriptReference/GameObject.SendMessage.html). 
-Each SoundElement stores a timestamp in order for it to be invoked when the AudioClip.time is passed.
+Each SoundEvent stores a timestamp in order for it to be invoked when the AudioClip.time is passed.
 
 - SoundPlayer : MonoBehaviour - stores a reference to a SoundElement. The class iterates through the audio events and invokes the event whose time stamp is reached by the AudioClip.time. 
 It also stores a float value corresponding to the SoundElement.AnimationCurve.Evaluate.
